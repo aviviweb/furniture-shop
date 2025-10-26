@@ -1,0 +1,22 @@
+{
+  "name": "@furniture/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@furniture/shared": "workspace:*",
+    "@furniture/ui": "workspace:*",
+    "clsx": "^2.1.1",
+    "next": "14.2.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2"
+  }
+}

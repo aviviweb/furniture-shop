@@ -1,0 +1,50 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: furniture
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/furniture
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: change-me
+    depends_on: [postgres, redis]
+    ports:
+      - "4000:4000"
+
+  web:
+    build: ./frontend
+    environment:
+      NEXT_PUBLIC_BASE_URL: http://localhost:3000
+    depends_on: [api]
+    ports:
+      - "3000:3000"
+
+  worker:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install && pnpm --filter @furniture/worker start"
+    volumes:
+      - ./:/app
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on: [redis]
+
+volumes:
+  pgdata:
+
+

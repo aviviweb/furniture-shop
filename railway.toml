@@ -1,0 +1,16 @@
+[project]
+name = "furniture-saas"
+
+[services.api]
+path = "backend"
+start = "pnpm --filter @furniture/api start"
+
+[services.web]
+path = "frontend"
+start = "pnpm --filter @furniture/web start"
+
+[services.worker]
+path = "."
+start = "pnpm --filter @furniture/worker start"
+
+
