@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { showToast } from '../../../toast';
+import { showToast } from './toast';
 
 type Review = {
   id: string;

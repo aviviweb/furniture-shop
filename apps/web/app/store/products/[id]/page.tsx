@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { apiGet } from '../../../lib/api';
-import { showToast } from '../../toast';
+import { apiGet } from '../../../../lib/api';
+import { showToast } from '../../../toast';
 import { WishlistButton } from '../../../wishlist';
 import { RecentlyViewed, ProductRecommendations } from '../../../recommendations';
 import { ReviewForm, ReviewList } from '../../../reviews';
