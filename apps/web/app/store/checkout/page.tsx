@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiPost } from '../../../lib/api';
 import { showToast } from '../../toast';
-import { PaymentMethodSelector } from '../../../payment-demo';
+import { PaymentMethodSelector } from '../../payment-demo';
 
 type CartItem = { productId: string; variantId: string; name?: string; sku?: string; price: number; qty: number; imageUrl?: string };
 
@@ -44,7 +44,7 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) {
-      showToast('Your cart is empty');
+      showToast('העגלה שלך ריקה');
       return;
     }
 
@@ -89,7 +89,7 @@ export default function CheckoutPage() {
       localStorage.removeItem('cart');
       window.dispatchEvent(new Event('storage'));
 
-      showToast('Order placed successfully!');
+      showToast('ההזמנה נוצרה בהצלחה!');
       
       // Store order in history
       const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
@@ -107,7 +107,7 @@ export default function CheckoutPage() {
       router.push(`/store/orders/${order.id}`);
     } catch (error) {
       console.error('Checkout failed:', error);
-      showToast('Checkout failed. Please try again.');
+      showToast('שגיאה בתהליך התשלום. נסה שוב.');
     } finally {
       setIsProcessing(false);
     }
@@ -118,24 +118,24 @@ export default function CheckoutPage() {
   if (cart.length === 0) {
     return (
       <main style={{ padding: 24 }}>
-        <h1>Checkout</h1>
-        <p>Your cart is empty. <a href="/store/products">Continue shopping</a></p>
+        <h1>תשלום</h1>
+        <p>העגלה שלך ריקה. <a href="/store/products">המשך לקנות</a></p>
       </main>
     );
   }
 
   return (
     <main style={{ padding: 24, maxWidth: 800, margin: '0 auto' }}>
-      <h1>Checkout</h1>
+      <h1>תשלום</h1>
       
       <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 24 }}>
         {/* Customer Information */}
         <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: 20 }}>
-          <h2 style={{ margin: '0 0 16px 0' }}>Customer Information</h2>
+          <h2 style={{ margin: '0 0 16px 0' }}>פרטי לקוח</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <input
               type="text"
-              placeholder="Full Name"
+              placeholder="שם מלא"
               value={customerInfo.name}
               onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
               required
@@ -143,7 +143,7 @@ export default function CheckoutPage() {
             />
             <input
               type="email"
-              placeholder="Email"
+              placeholder="אימייל"
               value={customerInfo.email}
               onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
               required
@@ -151,14 +151,14 @@ export default function CheckoutPage() {
             />
             <input
               type="tel"
-              placeholder="Phone"
+              placeholder="טלפון"
               value={customerInfo.phone}
               onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
               style={{ padding: 12, border: '1px solid #e5e7eb', borderRadius: 6 }}
             />
             <input
               type="text"
-              placeholder="Address"
+              placeholder="כתובת"
               value={customerInfo.address}
               onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})}
               required
@@ -166,7 +166,7 @@ export default function CheckoutPage() {
             />
             <input
               type="text"
-              placeholder="City"
+              placeholder="עיר"
               value={customerInfo.city}
               onChange={(e) => setCustomerInfo({...customerInfo, city: e.target.value})}
               required
@@ -174,7 +174,7 @@ export default function CheckoutPage() {
             />
             <input
               type="text"
-              placeholder="ZIP Code"
+              placeholder="מיקוד"
               value={customerInfo.zipCode}
               onChange={(e) => setCustomerInfo({...customerInfo, zipCode: e.target.value})}
               required
@@ -185,7 +185,7 @@ export default function CheckoutPage() {
 
         {/* Shipping Method */}
         <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: 20 }}>
-          <h2 style={{ margin: '0 0 16px 0' }}>Shipping Method</h2>
+          <h2 style={{ margin: '0 0 16px 0' }}>שיטת משלוח</h2>
           <div style={{ display: 'grid', gap: 12 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
               <input
@@ -195,7 +195,7 @@ export default function CheckoutPage() {
                 checked={shippingMethod === 'standard'}
                 onChange={(e) => setShippingMethod(e.target.value)}
               />
-              <span>Standard Delivery (3-5 days) - ₪{calculateShipping()} </span>
+              <span>משלוח סטנדרטי (3-5 ימים) - ₪{calculateShipping()} </span>
             </label>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
               <input
@@ -205,7 +205,7 @@ export default function CheckoutPage() {
                 checked={shippingMethod === 'express'}
                 onChange={(e) => setShippingMethod(e.target.value)}
               />
-              <span>Express Delivery (1-2 days) - ₪{calculateShipping()} </span>
+              <span>משלוח מהיר (1-2 ימים) - ₪{calculateShipping()} </span>
             </label>
           </div>
         </section>
@@ -223,7 +223,7 @@ export default function CheckoutPage() {
 
         {/* Order Summary */}
         <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: 20 }}>
-          <h2 style={{ margin: '0 0 16px 0' }}>Order Summary</h2>
+          <h2 style={{ margin: '0 0 16px 0' }}>סיכום הזמנה</h2>
           <div style={{ display: 'grid', gap: 8 }}>
             {cart.map((item, idx) => (
               <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -233,19 +233,19 @@ export default function CheckoutPage() {
             ))}
             <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: 8, marginTop: 8 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Subtotal:</span>
+                <span>סה"כ ביניים:</span>
                 <span>₪{totals.subtotal.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Shipping:</span>
+                <span>משלוח:</span>
                 <span>₪{totals.shipping.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Tax (17%):</span>
+                <span>מע"מ (17%):</span>
                 <span>₪{totals.tax.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: 18, marginTop: 8 }}>
-                <span>Total:</span>
+                <span>סה"כ:</span>
                 <span>₪{totals.total.toLocaleString()}</span>
               </div>
             </div>
@@ -266,7 +266,7 @@ export default function CheckoutPage() {
             fontWeight: 'bold'
           }}
         >
-          {isProcessing ? 'Processing...' : `Place Order - ₪${totals.total.toLocaleString()}`}
+          {isProcessing ? 'מעבד...' : `השלם הזמנה - ₪${totals.total.toLocaleString()}`}
         </button>
       </form>
     </main>
