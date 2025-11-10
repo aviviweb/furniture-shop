@@ -22,6 +22,6 @@ EXPOSE 3000
 ENV PORT=3000
 ENV NODE_ENV=production
 
-CMD ["sh", "-c", "pnpm --filter @furniture/web start -p ${PORT:-3000}"]
+CMD ["pnpm", "--filter", "@furniture/web", "start"]
 
 
