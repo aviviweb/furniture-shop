@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { showToast } from '../../toast';
+import { showToast } from './toast';
 
 type PaymentMethod = 'stripe' | 'paypal' | 'bank';
 

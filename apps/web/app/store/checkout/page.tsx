@@ -66,11 +66,11 @@ export default function CheckoutPage() {
         totals
       };
 
-      const order = await apiPost('/orders', orderData);
+      const order = await apiPost<any>('/orders', orderData);
       
       // Create invoice
-      const invoice = await apiPost('/invoices', {
-        orderId: order.id,
+      const invoice = await apiPost<any>('/invoices', {
+        orderId: (order as any).id,
         customerInfo,
         items: cart.map(item => ({
           productId: item.productId,
