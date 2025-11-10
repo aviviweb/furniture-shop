@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { showToast } from '../../toast';
+import { showToast } from './toast';
 
 type NotificationType = 'order_confirmed' | 'order_shipped' | 'order_delivered' | 'payment_received' | 'review_request';
 

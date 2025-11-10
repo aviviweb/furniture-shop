@@ -23,7 +23,7 @@ export function MiniCart({ open, onClose }: { open: boolean; onClose: ()=>void }
     const filtered = cart.filter((item: any) => item.variantId !== variantId);
     localStorage.setItem('cart', JSON.stringify(filtered));
     setItems(filtered);
-    showToast('Item removed from cart');
+    showToast('הפריט הוסר מהעגלה');
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -49,11 +49,11 @@ export function MiniCart({ open, onClose }: { open: boolean; onClose: ()=>void }
       overflow: 'hidden', transition: 'width .25s ease', zIndex: 10000
     }}>
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding: 12, borderBottom:'1px solid #eee' }}>
-        <strong>Cart</strong>
+        <strong>עגלת קניות</strong>
         <button onClick={onClose} style={{ border:'none', background:'transparent', fontSize:20 }}>×</button>
       </div>
       <div style={{ padding: 12, display:'grid', gap: 8 }}>
-        {items.length === 0 && <div style={{ color:'#64748b' }}>Cart is empty</div>}
+        {items.length === 0 && <div style={{ color:'#64748b' }}>העגלה ריקה</div>}
         {items.map((it, idx) => (
           <div key={idx} style={{ display:'flex', gap:8, borderBottom:'1px solid #f1f5f9', paddingBottom:8 }}>
             {it.imageUrl && (
@@ -97,10 +97,10 @@ export function MiniCart({ open, onClose }: { open: boolean; onClose: ()=>void }
       </div>
       <div style={{ marginTop: 'auto', padding: 12, borderTop:'1px solid #eee' }}>
         <div style={{ display:'flex', justifyContent:'space-between', marginBottom: 8 }}>
-          <span>Total</span>
+          <span>סה"כ</span>
           <strong>{total.toLocaleString()} ₪</strong>
         </div>
-        <a href="/store/cart" style={{ display:'block', textAlign:'center', padding:10, background:'#0ea5e9', color:'#fff', borderRadius:8 }}>Go to Cart</a>
+        <a href="/store/cart" style={{ display:'block', textAlign:'center', padding:10, background:'#0ea5e9', color:'#fff', borderRadius:8 }}>לעגלה המלאה</a>
       </div>
     </div>
   );

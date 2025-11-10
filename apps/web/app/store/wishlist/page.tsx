@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { apiGet } from '../../lib/api';
+import { apiGet } from '../../../lib/api';
 
 type WishlistItem = { productId: string; name?: string; imageUrl?: string; price?: number; sku?: string };
 
@@ -12,7 +12,12 @@ export default function WishlistPage() {
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('wishlist') || '[]');
     setWishlist(stored);
-    apiGet('/products').then(setProducts).catch(() => setProducts([]));
+    apiGet('/products')
+      .then(setProducts)
+      .catch((error) => {
+        console.error('Failed to load products:', error);
+        setProducts([]);
+      });
   }, []);
 
   const removeFromWishlist = (productId: string) => {
@@ -47,12 +52,12 @@ export default function WishlistPage() {
 
   return (
     <main style={{ padding: 24 }}>
-      <h1>My Wishlist</h1>
+      <h1>רשימת משאלות</h1>
       {wishlist.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 0', color: '#64748b' }}>
-          <p>Your wishlist is empty</p>
+          <p>רשימת המשאלות שלך ריקה</p>
           <Link href="/store/products" style={{ display: 'inline-block', marginTop: 16, padding: '12px 24px', background: '#0ea5e9', color: '#fff', borderRadius: 8, textDecoration: 'none' }}>
-            Browse Products
+            עיין במוצרים
           </Link>
         </div>
       ) : (
@@ -76,13 +81,13 @@ export default function WishlistPage() {
                       onClick={() => addToCart(item)}
                       style={{ flex: 1, padding: '8px 12px', background: '#0ea5e9', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 }}
                     >
-                      Add to Cart
+                      הוסף לעגלה
                     </button>
                     <button 
                       onClick={() => removeFromWishlist(item.productId)}
                       style={{ padding: '8px 12px', background: 'transparent', color: '#ef4444', border: '1px solid #ef4444', borderRadius: 4, cursor: 'pointer', fontSize: 12 }}
                     >
-                      Remove
+                      הסר
                     </button>
                   </div>
                 </div>

@@ -5,7 +5,7 @@ import { apiGet } from '../../../lib/api';
 
 export const dynamic = 'force-dynamic';
 
-type Product = { id: string; name: string; price: number; stock?: number };
+type Product = { id: string; name: string; price?: number; stock?: number; variants?: Array<{ price: number; stock?: number }> };
 
 const demo: Product[] = [
   { id: 'PRD-001', name: 'ספה 3 מושבים', price: 2490, stock: 5 },
@@ -32,9 +32,10 @@ export default function ProductsPage() {
   const [priceMax, setPriceMax] = useState('');
   const [arch, setArch] = useState('');
   const filtered = useMemo(()=> data.filter(p => {
-    const text = p.name.includes(q) || p.id.includes(q);
+    const text = (p?.name || '').includes(q) || ((p?.id || '').includes(q));
+    const price = p.price ?? p.variants?.[0]?.price ?? 0;
     const pm = Number(priceMax);
-    const priceOk = !priceMax || p.price <= pm;
+    const priceOk = !priceMax || price <= pm;
     const a = (p as any).archived === true;
     const archOk = arch === '' || (arch === 'archived' ? a : !a);
     return text && priceOk && archOk;
@@ -78,17 +79,21 @@ export default function ProductsPage() {
                 <td colSpan={4} style={{ padding:16, color:'var(--color-muted)' }}>אין תוצאות תואמות לחיפוש.</td>
               </tr>
             )}
-            {filtered.map(row => (
+            {filtered.map(row => {
+              const price = row.price ?? row.variants?.[0]?.price ?? 0;
+              const stock = row.stock ?? row.variants?.[0]?.stock ?? '-';
+              return (
               <tr key={row.id}>
                 <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>{row.id}</td>
                 <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>{row.name}</td>
-                <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>₪{row.price.toLocaleString('he-IL')}</td>
-                <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>{row.stock ?? '-'}</td>
+                <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>₪{(price || 0).toLocaleString('he-IL')}</td>
+                <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>{stock}</td>
                 <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>
                   <button className="btn" onClick={()=> { try { const s=localStorage.getItem('demo-products'); const arr=s?JSON.parse(s):[]; const idx=arr.findIndex((x:any)=> x.id===row.id); if(idx>=0){ arr[idx].archived=!arr[idx].archived; localStorage.setItem('demo-products', JSON.stringify(arr)); } } catch {} }}> {(row as any).archived ? 'שחזר' : 'ארכב'} </button>
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>

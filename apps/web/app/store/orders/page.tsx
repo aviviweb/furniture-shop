@@ -45,11 +45,11 @@ export default function OrderHistoryPage() {
   if (orders.length === 0) {
     return (
       <main style={{ padding: 24 }}>
-        <h1>Order History</h1>
+        <h1>היסטוריית הזמנות</h1>
         <div style={{ textAlign: 'center', padding: '40px 0', color: '#64748b' }}>
-          <p>No orders found</p>
+          <p>לא נמצאו הזמנות</p>
           <Link href="/store/products" style={{ display: 'inline-block', marginTop: 16, padding: '12px 24px', background: '#0ea5e9', color: '#fff', borderRadius: 8, textDecoration: 'none' }}>
-            Start Shopping
+            התחל לקנות
           </Link>
         </div>
       </main>
@@ -58,13 +58,13 @@ export default function OrderHistoryPage() {
 
   return (
     <main style={{ padding: 24 }}>
-      <h1>Order History</h1>
+      <h1>היסטוריית הזמנות</h1>
       <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
         {orders.map((order) => (
           <div key={order.id} style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: 20, background: '#fff' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
               <div>
-                <h3 style={{ margin: '0 0 4px 0' }}>Order #{order.id}</h3>
+                <h3 style={{ margin: '0 0 4px 0' }}>הזמנה #{order.id}</h3>
                 <p style={{ margin: 0, color: '#64748b', fontSize: 14 }}>{formatDate(order.date)}</p>
               </div>
               <div style={{ textAlign: 'right' }}>
@@ -84,7 +84,7 @@ export default function OrderHistoryPage() {
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <h4 style={{ margin: '0 0 8px 0', fontSize: 14, color: '#64748b' }}>Items ({order.items.length})</h4>
+                <h4 style={{ margin: '0 0 8px 0', fontSize: 14, color: '#64748b' }}>פריטים ({order.items.length})</h4>
               <div style={{ display: 'grid', gap: 8 }}>
                 {order.items.map((item, idx) => (
                   <div key={idx} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -103,7 +103,7 @@ export default function OrderHistoryPage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
               <div>
-                <h4 style={{ margin: '0 0 8px 0', fontSize: 14, color: '#64748b' }}>Shipping Address</h4>
+                <h4 style={{ margin: '0 0 8px 0', fontSize: 14, color: '#64748b' }}>כתובת משלוח</h4>
                 <div style={{ fontSize: 14 }}>
                   <div>{order.customerInfo.name}</div>
                   <div>{order.customerInfo.address}</div>
@@ -112,7 +112,7 @@ export default function OrderHistoryPage() {
                 </div>
               </div>
               <div>
-                <h4 style={{ margin: '0 0 8px 0', fontSize: 14, color: '#64748b' }}>Order Summary</h4>
+                <h4 style={{ margin: '0 0 8px 0', fontSize: 14, color: '#64748b' }}>סיכום הזמנה</h4>
                 <div style={{ fontSize: 14 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Subtotal:</span>
@@ -139,13 +139,13 @@ export default function OrderHistoryPage() {
                 href={`/store/orders/${order.id}`} 
                 style={{ padding: '8px 16px', background: '#0ea5e9', color: '#fff', borderRadius: 6, textDecoration: 'none', fontSize: 14 }}
               >
-                View Details
+                צפייה בפרטים
               </Link>
               <Link 
                 href={`/store/invoices/${order.invoiceId}`} 
                 style={{ padding: '8px 16px', background: 'transparent', color: '#0ea5e9', border: '1px solid #0ea5e9', borderRadius: 6, textDecoration: 'none', fontSize: 14 }}
               >
-                View Invoice
+                צפייה בחשבונית
               </Link>
             </div>
           </div>

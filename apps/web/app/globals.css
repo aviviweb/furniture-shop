@@ -18,6 +18,12 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   background: var(--color-bg);
   color: var(--color-fg);
+  direction: rtl;
+  text-align: right;
+}
+* {
+  direction: rtl;
+  box-sizing: border-box;
 }
 .min-h-screen { min-height: 100vh; }
 .flex { display: flex; }

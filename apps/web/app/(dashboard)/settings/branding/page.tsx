@@ -16,13 +16,20 @@ export default function BrandingSettingsPage() {
   const [companyId, setCompanyId] = useState('123456789');
   const [phone, setPhone] = useState('03-0000000');
   const [address, setAddress] = useState('רח׳ הדוגמה 1, תל אביב');
+  const [website, setWebsite] = useState('https://example.com');
+  const [facebook, setFacebook] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [linkedin, setLinkedin] = useState('');
 
   useEffect(() => {
     const stored = localStorage.getItem('demo-brand');
     if (stored) {
-      const { primary: p, accent: a, logo, companyName: cn, companyId: cid, phone: ph, address: ad } = JSON.parse(stored);
+      const data = JSON.parse(stored);
+      const { primary: p, accent: a, logo, companyName: cn, companyId: cid, phone: ph, address: ad, website: ws, facebook: fb, instagram: ig, whatsapp: wa, linkedin: li } = data;
       setPrimary(p); setAccent(a); setLogoUrl(logo || ''); applyTheme(p, a);
       if (cn) setCompanyName(cn); if (cid) setCompanyId(cid); if (ph) setPhone(ph); if (ad) setAddress(ad);
+      if (ws) setWebsite(ws); if (fb) setFacebook(fb); if (ig) setInstagram(ig); if (wa) setWhatsapp(wa); if (li) setLinkedin(li);
     }
   }, []);
 
@@ -63,12 +70,44 @@ export default function BrandingSettingsPage() {
         כתובת
         <input value={address} onChange={(e)=> setAddress(e.target.value)} />
       </label>
+      
+      <hr style={{ margin: '16px 0' }} />
+      <h2 style={{ margin:0, fontSize:18 }}>רשתות חברתיות</h2>
+      
+      <label style={{ display:'grid', gap: 6 }}>
+        אתר (URL)
+        <input value={website} onChange={(e)=> setWebsite(e.target.value)} placeholder="https://example.com" />
+      </label>
+      
+      <label style={{ display:'grid', gap: 6 }}>
+        Facebook
+        <input value={facebook} onChange={(e)=> setFacebook(e.target.value)} placeholder="https://facebook.com/..." />
+      </label>
+      
+      <label style={{ display:'grid', gap: 6 }}>
+        Instagram
+        <input value={instagram} onChange={(e)=> setInstagram(e.target.value)} placeholder="https://instagram.com/..." />
+      </label>
+      
+      <label style={{ display:'grid', gap: 6 }}>
+        WhatsApp
+        <input value={whatsapp} onChange={(e)=> setWhatsapp(e.target.value)} placeholder="https://wa.me/972..." />
+      </label>
+      
+      <label style={{ display:'grid', gap: 6 }}>
+        LinkedIn
+        <input value={linkedin} onChange={(e)=> setLinkedin(e.target.value)} placeholder="https://linkedin.com/..." />
+      </label>
+      
       <div style={{ display:'flex', gap: 8 }}>
         <button className="btn" onClick={() => applyTheme(primary, accent)}>תצוגה מקדימה</button>
         <button className="btn" onClick={() => {
-          localStorage.setItem('demo-brand', JSON.stringify({ primary, accent, logo: logoUrl, companyName, companyId, phone, address }));
+          localStorage.setItem('demo-brand', JSON.stringify({ 
+            primary, accent, logo: logoUrl, companyName, companyId, phone, address,
+            website, facebook, instagram, whatsapp, linkedin
+          }));
           applyTheme(primary, accent);
-          setSaved('הצבענו ושמרנו לדמו');
+          setSaved('נשמר בהצלחה!');
         }}>שמור (דמו)</button>
       </div>
       {saved && <span style={{ color:'var(--color-muted)' }}>{saved}</span>}

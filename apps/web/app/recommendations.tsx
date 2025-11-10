@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { apiGet } from '../../lib/api';
+import { apiGet } from '../lib/api';
 
 type Product = { id: string; name: string; description?: string; imageUrl?: string; variants?: any[]; category?: string };
 

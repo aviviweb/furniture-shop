@@ -80,7 +80,7 @@ export default function InvoiceDetailPage() {
           <div>לקוח: <strong>{item.customer}</strong></div>
           <div>מס׳ חשבונית: <strong>{id}</strong></div>
           <div>תאריך: <strong>{new Date().toLocaleDateString('he-IL')}</strong></div>
-          <div>סכום: <strong>₪{item.amount.toLocaleString('he-IL')}</strong></div>
+          <div>סכום: <strong>₪{(item.amount || 0).toLocaleString('he-IL')}</strong></div>
           <div>סטטוס: <span className={`badge ${item.status==='paid'?'badge-paid':'badge-pending'}`}>{item.status}</span></div>
           <hr />
           <table style={{ width:'100%', borderCollapse:'collapse', marginTop:8 }}>
@@ -104,14 +104,14 @@ export default function InvoiceDetailPage() {
                 <tr>
                   <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>שירות/מוצר דמו</td>
                   <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>1</td>
-                  <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>₪{item.amount.toLocaleString('he-IL')}</td>
-                  <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>₪{item.amount.toLocaleString('he-IL')}</td>
+                  <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>₪{(item.amount || 0).toLocaleString('he-IL')}</td>
+                  <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>₪{(item.amount || 0).toLocaleString('he-IL')}</td>
                 </tr>
               )}
             </tbody>
           </table>
           <div style={{ textAlign:'left', marginTop:8 }}>
-            <strong>סה"כ לתשלום: ₪{item.amount.toLocaleString('he-IL')}</strong>
+            <strong>סה"כ לתשלום: ₪{(item.amount || 0).toLocaleString('he-IL')}</strong>
             {typeof window !== 'undefined' && (()=>{ try { const stored = localStorage.getItem('demo-invoices'); const arr = stored? JSON.parse(stored): []; const found = arr.find((x:any)=> x.id===id); if(!found) return null; return found.terms ? <div style={{ marginTop:6, color:'var(--color-muted)' }}>תנאי תשלום: {found.terms}</div> : null; } catch { return null; } })()}
           </div>
           <div style={{ display:'flex', gap: 32, marginTop: 16 }}>

@@ -99,11 +99,11 @@ export default function InvoiceAdminEditor() {
           הנחה (%)
           <input type="number" value={discountPct} onChange={(e)=> setDiscountPct(Number(e.target.value)||0)} />
         </label>
-        <div>סכום ביניים: ₪{total.toLocaleString('he-IL')}</div>
-        <div>הנחה: ₪{discountAmount.toLocaleString('he-IL')}</div>
-        <div>חייב במע"מ: ₪{taxable.toLocaleString('he-IL')}</div>
-        <div>מע"מ: ₪{vatAmount.toLocaleString('he-IL')}</div>
-        <div><strong>סה"כ לתשלום: ₪{grand.toLocaleString('he-IL')}</strong></div>
+        <div>סכום ביניים: ₪{(total || 0).toLocaleString('he-IL')}</div>
+        <div>הנחה: ₪{(discountAmount || 0).toLocaleString('he-IL')}</div>
+        <div>חייב במע"מ: ₪{(taxable || 0).toLocaleString('he-IL')}</div>
+        <div>מע"מ: ₪{(vatAmount || 0).toLocaleString('he-IL')}</div>
+        <div><strong>סה"כ לתשלום: ₪{(grand || 0).toLocaleString('he-IL')}</strong></div>
       </div>
       <label style={{ display:'grid', gap: 6 }}>
         סטטוס

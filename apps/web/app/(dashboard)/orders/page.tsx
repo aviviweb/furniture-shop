@@ -24,7 +24,7 @@ export default function OrdersPage() {
   const [dateTo, setDateTo] = useState('');
   const [arch, setArch] = useState('');
   const filtered = useMemo(()=> data.filter(o => {
-    const text = o.id.includes(q) || o.customer.includes(q);
+    const text = (o?.id || '').includes(q) || (((o as any)?.customer || '').includes(q));
     const st = !status || o.status === status;
     const d = (o as any).date || '';
     const df = !dateFrom || d >= dateFrom;

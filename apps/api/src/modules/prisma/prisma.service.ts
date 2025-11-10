@@ -19,6 +19,11 @@ function createDemoPrismaMock(): PrismaClientLike {
       secondaryColor: '#10b981',
       logoUrl: null,
       domain: null,
+      website: null,
+      facebook: null,
+      instagram: null,
+      whatsapp: null,
+      linkedin: null,
     },
   };
 
@@ -52,6 +57,23 @@ function createDemoPrismaMock(): PrismaClientLike {
         { name: 'שולחן קפה עגול', description: 'שולחן במראה מודרני', price: 690, sku: 'PRD-003', stock: 25, category: 'שולחנות', imageUrl: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1200&auto=format&fit=crop' },
         { name: 'כיסא בר מרופד', description: 'נוח ויציב למטבח', price: 380, sku: 'PRD-004', stock: 30, category: 'כיסאות', imageUrl: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1200&auto=format&fit=crop' },
         { name: 'ארון הזזה 3 דלתות', description: 'אחסון רחב לחדר שינה', price: 3290, sku: 'PRD-005', stock: 5, category: 'ארונות', imageUrl: 'https://images.unsplash.com/photo-1604937455095-ef2fe3d34e05?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'כורסה צבעונית', description: 'כורסה מעוצבת ונוחה', price: 1290, sku: 'PRD-006', stock: 15, category: 'כיסאות', imageUrl: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'שולחן עגול אוכל', description: 'שולחן מתאים ל-6 אנשים', price: 1890, sku: 'PRD-007', stock: 8, category: 'שולחנות', imageUrl: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'ספה בשורה 3 מושבים', description: 'ספה פינתית מרווחת', price: 5490, sku: 'PRD-008', stock: 6, category: 'ספות', imageUrl: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'מיטה זוגית מעוצבת', description: 'שינה נוחה ואיכותית', price: 3990, sku: 'PRD-009', stock: 12, category: 'חדר שינה', imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'קונסולה לקירות', description: 'קונסולה אלגנטית לסלון', price: 890, sku: 'PRD-010', stock: 20, category: 'ארונות', imageUrl: 'https://images.unsplash.com/photo-1576502200272-341a4b11d717?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'שולחן עבודה עץ מלא', description: 'שולחן עבודה מרווח', price: 2490, sku: 'PRD-011', stock: 10, category: 'שולחנות', imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'כורסת טלוויזיה נוחה', description: 'כורסה מפוארת לפינה', price: 1790, sku: 'PRD-012', stock: 14, category: 'כיסאות', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'ספה בצורת L', description: 'ספה מרווחת לעיצוב מודרני', price: 5990, sku: 'PRD-013', stock: 4, category: 'ספות', imageUrl: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'ארון שידות זוגי', description: 'סט זוגי לארונות שידות', price: 2190, sku: 'PRD-014', stock: 9, category: 'חדר שינה', imageUrl: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'שולחן סלון עגול', description: 'שולחן עיצוב לסלון', price: 1490, sku: 'PRD-015', stock: 11, category: 'שולחנות', imageUrl: 'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'כיסא מנהלים עץ', description: 'כיסא משרדי איכותי', price: 890, sku: 'PRD-016', stock: 18, category: 'כיסאות', imageUrl: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'סלון נפתח מלא', description: 'סלון מתאים לפינה גדולה', price: 6990, sku: 'PRD-017', stock: 3, category: 'סלון', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'שולחן עבודה מתכוונן', description: 'שולחן גובה משתנה', price: 3490, sku: 'PRD-018', stock: 7, category: 'שולחנות', imageUrl: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'מיטה מעוצבת משפחתית', description: 'שינה מרווחת לזוג', price: 4990, sku: 'PRD-019', stock: 9, category: 'חדר שינה', imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'ארון קיר רחב 4 דלתות', description: 'אחסון מרבי', price: 4290, sku: 'PRD-020', stock: 5, category: 'ארונות', imageUrl: 'https://images.unsplash.com/photo-1604937455095-ef2fe3d34e05?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'ספה זוויתית מודרנית', description: 'פינה מעוצבת לסלון', price: 6490, sku: 'PRD-021', stock: 4, category: 'ספות', imageUrl: 'https://images.unsplash.com/photo-1612637968894-6601d6c35c97?q=80&w=1200&auto=format&fit=crop' },
+        { name: 'כורסת נוחה מעוצבת', description: 'כורסה לעבודה ונוחות', price: 2190, sku: 'PRD-022', stock: 12, category: 'כיסאות', imageUrl: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?q=80&w=1200&auto=format&fit=crop' },
       ];
       for (const p of demoProducts) {
         const pid = newId('prd');
@@ -217,14 +239,27 @@ function createDemoPrismaMock(): PrismaClientLike {
       },
     },
 
-    // transaction shim
+    // transaction shim - מספק את כל ה-operations ב-transaction context
     $transaction: async (fn: (tx: any) => Promise<any>) => {
       const tx = {
-        order: (this as any).order,
-        orderItem: (this as any).orderItem,
-        productVariant: (this as any).productVariant,
-        invoice: (this as any).invoice,
-        auditLog: (this as any).auditLog,
+        order: {
+          create: (this as any).order.create,
+        },
+        orderItem: {
+          create: (this as any).orderItem.create,
+        },
+        productVariant: {
+          update: (this as any).productVariant.update,
+        },
+        invoice: {
+          create: (this as any).invoice.create,
+        },
+        auditLog: {
+          create: (this as any).auditLog.create,
+        },
+        invoiceSequence: {
+          upsert: (this as any).invoiceSequence.upsert,
+        },
       } as any;
       return await fn(tx);
     },

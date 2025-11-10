@@ -29,17 +29,17 @@ export default function CartPage() {
     const filtered = cart.filter(item => item.variantId !== variantId);
     localStorage.setItem('cart', JSON.stringify(filtered));
     setCart(filtered);
-    showToast('Item removed from cart');
+    showToast('הפריט הוסר מהעגלה');
     window.dispatchEvent(new Event('storage'));
   };
   return (
     <main style={{ padding: 24 }}>
-      <h1>Your Cart</h1>
+      <h1>העגלה שלך</h1>
       {cart.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 0', color: '#64748b' }}>
-          <p>Your cart is empty</p>
+          <p>העגלה שלך ריקה</p>
           <Link href="/store/products" style={{ display: 'inline-block', marginTop: 16, padding: '12px 24px', background: '#0ea5e9', color: '#fff', borderRadius: 8, textDecoration: 'none' }}>
-            Continue Shopping
+            המשך לקנות
           </Link>
         </div>
       ) : (
@@ -89,15 +89,15 @@ export default function CartPage() {
           </div>
           <div style={{ marginTop: 24, padding: 20, background: '#f8fafc', borderRadius: 8 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <span style={{ fontSize: 18, fontWeight: 600 }}>Total</span>
+              <span style={{ fontSize: 18, fontWeight: 600 }}>סה"כ</span>
               <span style={{ fontSize: 24, fontWeight: 700 }}>{total.toLocaleString()} ₪</span>
             </div>
             <div style={{ display: 'flex', gap: 12 }}>
               <Link href="/store/products" style={{ padding: '12px 24px', color: '#0ea5e9', border: '1px solid #0ea5e9', borderRadius: 8, textDecoration: 'none' }}>
-                Continue Shopping
+                המשך לקנות
               </Link>
               <Link href="/store/checkout" style={{ padding: '12px 24px', background: '#10b981', color: '#fff', borderRadius: 8, textDecoration: 'none' }}>
-                Proceed to Checkout
+                היכנס לתשלום
               </Link>
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { apiGet } from '../../lib/api';
+import { apiGet } from '../../../lib/api';
 import { showToast } from '../../toast';
 import { WishlistButton } from '../../wishlist';
 
@@ -13,7 +13,12 @@ export default function ProductsPage() {
   const [q, setQ] = useState('');
   const [category, setCategory] = useState('');
   useEffect(() => {
-    apiGet<Product[]>('/products').then(setItems).catch(() => setItems([]));
+    apiGet<Product[]>('/products')
+      .then(setItems)
+      .catch((error) => {
+        console.error('Failed to load products:', error);
+        setItems([]);
+      });
   }, []);
   const filtered = items.filter(p => {
     const matchesQ = !q || p.name.toLowerCase().includes(q.toLowerCase()) || (p.description||'').toLowerCase().includes(q.toLowerCase());
@@ -22,37 +27,42 @@ export default function ProductsPage() {
   });
 
   const addToCart = (product: Product) => {
-    if (!product.variants?.[0]) {
-      showToast('Error: Product variant not found.');
-      return;
+    try {
+      if (!product.variants?.[0]) {
+        showToast('שגיאה: לא נמצא גרסת מוצר.');
+        return;
+      }
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const existingItem = cart.find((item: any) => item.variantId === product.variants?.[0]?.id);
+      if (existingItem) {
+        existingItem.qty += 1;
+      } else {
+        cart.push({
+          productId: product.id,
+          variantId: product.variants[0].id,
+          name: product.name,
+          sku: product.variants[0].sku,
+          price: product.variants[0].price,
+          qty: 1,
+          imageUrl: product.imageUrl,
+        });
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      showToast(`${product.name} נוסף לעגלה!`);
+      // Trigger storage event for CartBadge update
+      window.dispatchEvent(new Event('storage'));
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      showToast('שגיאה בהוספה לעגלה');
     }
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find((item: any) => item.variantId === product.variants?.[0]?.id);
-    if (existingItem) {
-      existingItem.qty += 1;
-    } else {
-      cart.push({
-        productId: product.id,
-        variantId: product.variants[0].id,
-        name: product.name,
-        sku: product.variants[0].sku,
-        price: product.variants[0].price,
-        qty: 1,
-        imageUrl: product.imageUrl,
-      });
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    showToast(`${product.name} added to cart!`);
-    // Trigger storage event for CartBadge update
-    window.dispatchEvent(new Event('storage'));
   };
   return (
     <main style={{ padding: 24 }}>
-      <h1>Products</h1>
+      <h1>מוצרים</h1>
       <div style={{ display:'flex', gap:12, marginTop: 8, marginBottom: 12 }}>
-        <input value={q} onChange={e=> setQ(e.target.value)} placeholder="Search..." style={{ padding:8, border:'1px solid #e5e7eb', borderRadius:8 }} />
+        <input value={q} onChange={e=> setQ(e.target.value)} placeholder="חיפוש..." style={{ padding:8, border:'1px solid #e5e7eb', borderRadius:8 }} />
         <select value={category} onChange={e=> setCategory(e.target.value)} style={{ padding:8, border:'1px solid #e5e7eb', borderRadius:8 }}>
-          <option value="">All Categories</option>
+          <option value="">כל הקטגוריות</option>
           <option value="ספות">ספות</option>
           <option value="סלון">סלון</option>
           <option value="שולחנות">שולחנות</option>
@@ -95,9 +105,9 @@ export default function ProductsPage() {
                   fontSize: 12
                 }}
               >
-                Add to Cart
+                הוסף לעגלה
               </button>
-              <Link href={`/store/products/${p.id}`} style={{ marginLeft: 'auto', color: '#0ea5e9', fontSize: 14 }}>View</Link>
+              <Link href={`/store/products/${p.id}`} style={{ marginLeft: 'auto', color: '#0ea5e9', fontSize: 14 }}>צפייה</Link>
             </div>
             </div>
           </li>

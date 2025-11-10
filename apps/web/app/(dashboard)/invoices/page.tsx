@@ -34,7 +34,7 @@ export default function InvoicesPage() {
   }, []);
 
   const filtered = useMemo(()=> data.filter(i => {
-    const text = i.id.includes(q) || i.customer.includes(q);
+    const text = (i?.id || '').includes(q) || (((i as any)?.customer || '').includes(q));
     const st = !status || (i as any).status === status;
     const d = (i as any).date || '';
     const df = !dateFrom || d >= dateFrom;
@@ -114,7 +114,7 @@ export default function InvoicesPage() {
                   <a href={`/invoices/${row.id}`} style={{ color:'var(--color-primary)', textDecoration:'none' }}>{row.id}</a>
                 </td>
                 <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>{row.customer}</td>
-                <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>₪{row.amount.toLocaleString('he-IL')}</td>
+                <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>₪{(row.amount || 0).toLocaleString('he-IL')}</td>
                 <td style={{ padding:8, borderBottom:'1px solid #f1f5f9' }}>
                   <span className={`badge ${row.status==='paid'?'badge-paid':'badge-pending'}`}>{row.status}</span>
                 </td>
