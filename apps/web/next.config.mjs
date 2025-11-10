@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@furniture/ui', '@furniture/shared'],
-  output: 'standalone', // Optimize for Railway deployment
+  // Railway will handle port binding automatically
 };
 
 export default nextConfig;
