@@ -13,6 +13,7 @@ start = "pnpm --filter @furniture/web start"
 
 [services.worker]
 path = "."
+build = "pnpm install --frozen-lockfile"
 start = "pnpm --filter @furniture/worker start"
 
 
