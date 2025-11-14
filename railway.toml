@@ -3,10 +3,12 @@ name = "furniture-saas"
 
 [services.api]
 path = "backend"
+build = "pnpm --filter @furniture/api build"
 start = "pnpm --filter @furniture/api start"
 
 [services.web]
 path = "frontend"
+build = "pnpm --filter @furniture/web build"
 start = "pnpm --filter @furniture/web start"
 
 [services.worker]
