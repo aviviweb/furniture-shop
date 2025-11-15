@@ -1,9 +1,22 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
-const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || 'furniture-demo';
+import { getTenantId } from './tenant';
 
-export async function apiGet<T>(path: string): Promise<T> {
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
+/**
+ * Get tenant ID for API calls
+ * Automatically detects from subdomain or falls back to env/default
+ */
+function getTenantIdForApi(): string {
+  return getTenantId();
+}
+
+export async function apiGet<T>(path: string, tenantId?: string): Promise<T> {
   try {
-    const res = await fetch(`${API_BASE}${path}`, { cache: 'no-store', headers: { 'x-tenant-id': TENANT_ID } });
+    const tid = tenantId || getTenantIdForApi();
+    const res = await fetch(`${API_BASE}${path}`, { 
+      cache: 'no-store', 
+      headers: { 'x-tenant-id': tid } 
+    });
     if (!res.ok) {
       const errorText = await res.text();
       console.error('API GET error:', errorText);
@@ -16,11 +29,15 @@ export async function apiGet<T>(path: string): Promise<T> {
   }
 }
 
-export async function apiPost<T>(path: string, body: any): Promise<T> {
+export async function apiPost<T>(path: string, body: any, tenantId?: string): Promise<T> {
   try {
+    const tid = tenantId || getTenantIdForApi();
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-tenant-id': TENANT_ID },
+      headers: { 
+        'Content-Type': 'application/json', 
+        'x-tenant-id': tid 
+      },
       body: JSON.stringify(body),
     });
     if (!res.ok) {
@@ -35,11 +52,15 @@ export async function apiPost<T>(path: string, body: any): Promise<T> {
   }
 }
 
-export async function apiPatch<T>(path: string, body: any): Promise<T> {
+export async function apiPatch<T>(path: string, body: any, tenantId?: string): Promise<T> {
   try {
+    const tid = tenantId || getTenantIdForApi();
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'x-tenant-id': TENANT_ID },
+      headers: { 
+        'Content-Type': 'application/json', 
+        'x-tenant-id': tid 
+      },
       body: JSON.stringify(body),
     });
     if (!res.ok) {

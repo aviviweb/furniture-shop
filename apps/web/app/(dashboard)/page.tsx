@@ -3,6 +3,8 @@
 import { DemoBanner } from './dashboard-banner';
 import { useState } from 'react';
 import { QuickCreateInvoice, QuickCreateOrder } from './QuickCreate';
+import { getTenantId } from '../../lib/tenant';
+import { apiPost } from '../../lib/api';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,10 +14,8 @@ export default function DashboardPage() {
   const reset = async () => {
     try {
       localStorage.removeItem('cart');
-      await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4010/api') + '/superadmin/resetDemo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-tenant-id': (process.env.NEXT_PUBLIC_TENANT_ID || 'furniture-demo') },
-      });
+      const tenantId = getTenantId();
+      await apiPost('/superadmin/resetDemo', {}, tenantId);
       location.reload();
     } catch (e) {
       console.error(e);

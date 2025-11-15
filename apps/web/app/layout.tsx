@@ -3,6 +3,8 @@ import './globals.css';
 import { Heebo } from 'next/font/google';
 import { I18nProvider } from './i18n';
 import { ClientShell } from './ClientShell';
+import { headers } from 'next/headers';
+import { loadTenantSettings } from '../lib/tenant';
 
 const heebo = Heebo({ subsets: ['hebrew', 'latin'], weight: ['400', '500', '700'] });
 
@@ -11,13 +13,18 @@ export const metadata = {
   description: 'מערכת SaaS לרהיטים - RTL',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // layout is a server component by default; but we used client hooks already.
-  // Switch to client by lifting to a wrapper if needed. Simpler: render client-only parts inside a small wrapper.
-  // For now, use a local state via a small client island below.
-  const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || 'Furniture Demo';
-  const primary = process.env.NEXT_PUBLIC_PRIMARY_COLOR || '#0ea5e9';
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Get tenant ID from headers (set by middleware)
+  const headersList = await headers();
+  const tenantId = headersList.get('x-tenant-id') || process.env.NEXT_PUBLIC_TENANT_ID || 'furniture-demo';
+  
+  // Load tenant settings from API
+  const tenantSettings = await loadTenantSettings(tenantId);
+  
+  const brandName = tenantSettings.brandName;
+  const primary = tenantSettings.primaryColor;
   const text = '#0f172a';
+  
   return (
     <html lang="he" dir="rtl" className={heebo.className}>
       <head>
