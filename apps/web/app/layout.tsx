@@ -36,7 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body style={{ color: text }}>
         <I18nProvider>
-          <div id="toast-root" style={{ position:'fixed', top:16, left:16, display:'grid', gap:8, zIndex:9999 }} />
+          <div id="toast-root" style={{ position:'fixed', top:16, right:16, display:'grid', gap:8, zIndex:9999 }} />
           <ClientShell brandName={brandName} primary={primary} text={text}>
             {children}
           </ClientShell>

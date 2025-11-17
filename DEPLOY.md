@@ -68,7 +68,19 @@ railway add redis
 
 ## שלב 4: הגדרת משתני סביבה
 
-### API Service Variables
+### דרך מהירה (מומלץ)
+
+השתמש בסקריפט האוטומטי:
+
+```powershell
+pnpm railway:setup
+```
+
+הסקריפט יבקש ממך את ה-URLs ויגדיר את כל ה-Variables אוטומטית.
+
+### דרך ידנית
+
+#### API Service Variables
 
 העתק את הערכים מ-`apps/api/env.example` והגדר ב-Railway:
 
@@ -77,9 +89,9 @@ railway add redis
 railway variables set --service api DEMO_MODE=false
 railway variables set --service api JWT_SECRET=<strong-random-secret>
 railway variables set --service api PORT=4000
-railway variables set --service api DATABASE_URL=<postgresql-url-from-railway>
-railway variables set --service api REDIS_URL=<redis-url-from-railway>
 railway variables set --service api FRONTEND_URL=https://<your-web-domain>.railway.app
+
+# DATABASE_URL ו-REDIS_URL יתווספו אוטומטית מ-Railway
 ```
 
 **שירותים אופציונליים** (אם יש לך API keys):
@@ -122,7 +134,11 @@ railway variables set --service worker OPENAI_API_KEY=<key>
 
 ## שלב 5: הגדרת Railway.toml
 
-הקובץ `railway.toml` כבר מוגדר:
+הקובץ `railway.toml` כבר מוגדר ונכון. הוא כולל:
+
+- Build commands שמוודאים ש-Prisma Client נוצר לפני build
+- Start commands לכל service
+- Paths נכונים לכל service
 
 ```toml
 [project]
@@ -130,32 +146,35 @@ name = "furniture-saas"
 
 [services.api]
 path = "backend"
+build = "pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/api build"
 start = "pnpm --filter @furniture/api start"
 
 [services.web]
 path = "frontend"
+build = "pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/web build"
 start = "pnpm --filter @furniture/web start"
 
 [services.worker]
 path = "."
+build = "pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate"
 start = "pnpm --filter @furniture/worker start"
 ```
+
+**חשוב:** הקובץ כבר מתוקן ומוכן לשימוש!
 
 ## שלב 6: הרצת Database Migrations
 
 לפני הפריסה, צריך להריץ migrations על ה-Database:
 
 ```powershell
-# הגדר DATABASE_URL זמנית
-$env:DATABASE_URL="<postgresql-url-from-railway>"
+# דרך מהירה (מומלץ)
+pnpm railway:migrate
 
-# הרץ migrations
-cd packages/prisma
-pnpm prisma migrate deploy
-
-# או דרך Railway CLI
+# או דרך Railway CLI ישירות
 railway run --service api pnpm --filter @furniture/prisma migrate deploy
 ```
+
+**חשוב:** ודא ש-`DATABASE_URL` מוגדר ב-API service לפני הרצת migrations!
 
 ## שלב 7: פריסה
 
@@ -178,25 +197,53 @@ railway up --service worker
 
 ### דרך package.json scripts:
 ```powershell
+# פריסה של service אחד
 pnpm deploy:api
 pnpm deploy:web
+pnpm deploy:worker
+
+# פריסה של כל ה-services
+pnpm deploy:all
 ```
 
 ## שלב 8: בדיקת ה-Deployment
 
-1. בדוק את ה-Logs:
+### בדיקת מצב כללי
+
+השתמש בסקריפט לבדיקת מצב:
+
 ```powershell
+pnpm railway:check
+```
+
+הסקריפט יבדוק:
+- Railway CLI מותקן ומחובר
+- פרויקט מקושר
+- Services קיימים
+- Environment Variables מוגדרים
+
+### בדיקת Logs
+
+```powershell
+# דרך מהירה
+pnpm railway:logs:api
+pnpm railway:logs:web
+pnpm railway:logs:worker
+
+# או דרך Railway CLI ישירות
 railway logs --service api
 railway logs --service web
 railway logs --service worker
 ```
 
-2. בדוק את ה-Status:
-   - Railway Dashboard → Services → בחר service → Logs
+### בדיקת Status
 
-3. בדוק את ה-URLs:
-   - Railway Dashboard → Services → בחר service → Settings → Networking
-   - העתק את ה-Public URL
+- Railway Dashboard → Services → בחר service → Logs
+
+### בדיקת URLs
+
+- Railway Dashboard → Services → בחר service → Settings → Networking
+- העתק את ה-Public URL
 
 ## טיפים לפתרון בעיות
 
@@ -281,9 +328,40 @@ railway logs --service worker
 2. **Railway יפרוס אוטומטית** (אם יש GitHub integration)
    - או: `railway up` ידנית
 
+## סקריפטים שימושיים
+
+הפרויקט כולל מספר סקריפטים שימושיים:
+
+```powershell
+# בדיקת מצב Railway
+pnpm railway:check
+
+# הגדרת Environment Variables אוטומטית
+pnpm railway:setup
+
+# הרצת Database Migrations
+pnpm railway:migrate
+
+# פריסת Services
+pnpm deploy:api
+pnpm deploy:web
+pnpm deploy:worker
+pnpm deploy:all
+
+# הצגת Logs
+pnpm railway:logs:api
+pnpm railway:logs:web
+pnpm railway:logs:worker
+```
+
+## רשימת בדיקה
+
+ראה [RAILWAY_CHECKLIST.md](./RAILWAY_CHECKLIST.md) לרשימת בדיקה מקיפה.
+
 ## תמיכה
 
 לבעיות נוספות:
 - [Railway Documentation](https://docs.railway.app)
 - [Railway Discord](https://discord.gg/railway)
+- [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) - פתרון בעיות נפוצות
 

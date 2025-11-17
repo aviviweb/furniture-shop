@@ -63,7 +63,7 @@ export default function ProductDetail() {
     window.dispatchEvent(new Event('storage'));
   }
 
-  if (!product) return <main style={{ padding: 24 }}>Loading...</main>;
+  if (!product) return <main style={{ padding: 24 }}>טוען...</main>;
   return (
     <main style={{ padding: 24 }}>
       {product.imageUrl && (

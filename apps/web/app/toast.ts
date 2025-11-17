@@ -9,6 +9,8 @@ export function showToast(message: string) {
   el.style.borderRadius = '10px';
   el.style.background = '#fff';
   el.style.boxShadow = '0 8px 24px rgba(0,0,0,.08)';
+  el.style.direction = 'rtl';
+  el.style.textAlign = 'right';
   root.appendChild(el);
   setTimeout(()=> el.remove(), 2200);
 }

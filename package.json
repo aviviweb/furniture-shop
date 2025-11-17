@@ -21,10 +21,16 @@
     "demo:up": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ports=@(4000,4010,3000,3001,3002,3010); foreach($p in $ports){$processId=(Get-NetTCPConnection -LocalPort $p -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique); if($processId){Stop-Process -Id $processId -Force}}; $env:DEMO_MODE='true'; $env:PORT='4010'; Start-Process -NoNewWindow cmd -ArgumentList '/c','pnpm --filter @furniture/api start' -WorkingDirectory 'C:\\dev\\furniture-shop'; Start-Sleep -Seconds 4; $env:NEXT_PUBLIC_DEMO_MODE='true'; $env:NEXT_PUBLIC_TENANT_ID='furniture-demo'; $env:NEXT_PUBLIC_API_URL='http://localhost:4010/api'; $env:PORT='3010'; $env:NODE_ENV='development'; Start-Process -NoNewWindow cmd -ArgumentList '/c','cd apps\\web && pnpm dev -p 3010' -WorkingDirectory 'C:\\dev\\furniture-shop'; Write-Host 'Demo up → Web: http://localhost:3010  |  API: http://localhost:4010/api'\"",
     "smoke:api": "node scripts/smoke.cjs",
     "demo:smoke": "powershell -NoProfile -Command \"$env:API='http://localhost:4010/api'; node scripts/smoke.cjs\"",
-    "deploy:api": "pnpx --yes railway up --service api backend",
-    "deploy:web": "pnpx --yes railway up --service web frontend",
-    "deploy:api:env": "pnpx --yes railway variables set --service api DEMO_MODE=false JWT_SECRET=change-me",
-    "deploy:web:env": "powershell -NoProfile -Command \"param([string]$api=''); if(-not $api){Write-Host 'Usage: pnpm deploy:web:env --api https://...'; exit 1}; pnpx --yes railway variables set --service web NEXT_PUBLIC_TENANT_ID=furniture-demo NEXT_PUBLIC_API_URL=$api\""
+    "deploy:api": "pnpx --yes railway up --service api",
+    "deploy:web": "pnpx --yes railway up --service web",
+    "deploy:worker": "pnpx --yes railway up --service worker",
+    "deploy:all": "pnpm deploy:api && pnpm deploy:web && pnpm deploy:worker",
+    "railway:check": "powershell -NoProfile -ExecutionPolicy Bypass -File ./RAILWAY_CHECK.ps1",
+    "railway:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File ./RAILWAY_SETUP.ps1",
+    "railway:migrate": "pnpx --yes railway run --service api pnpm --filter @furniture/prisma migrate deploy",
+    "railway:logs:api": "pnpx --yes railway logs --service api",
+    "railway:logs:web": "pnpx --yes railway logs --service web",
+    "railway:logs:worker": "pnpx --yes railway logs --service worker"
   },
   "devDependencies": {
     "@types/node": "^24.9.1",

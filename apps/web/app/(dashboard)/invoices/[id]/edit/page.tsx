@@ -28,7 +28,7 @@ export default function InvoiceAdminEditor() {
   const grand = useMemo(()=> taxable + vatAmount, [taxable, vatAmount]);
 
   if (typeof window !== 'undefined' && localStorage.getItem('admin-mode') !== 'true') {
-    return <section className="card">אין הרשאה. הפעל מצב אדמין ב־Super Admin.</section>;
+    return <section className="card">אין הרשאה. הפעל מצב אדמין במנהל מערכת.</section>;
   }
   if (!inv) return <section className="card">טוען...</section>;
 

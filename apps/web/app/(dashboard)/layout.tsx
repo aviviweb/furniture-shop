@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               { href: '/deliveries', label: 'משלוחים/הרכבות' },
               { href: '/installer', label: 'אזור מתקין' },
               { href: '/settings/branding', label: 'מיתוג' },
-              { href: '/superadmin', label: 'Super Admin' },
+              { href: '/superadmin', label: 'מנהל מערכת' },
             ].map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="nav-link">

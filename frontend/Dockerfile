@@ -12,6 +12,9 @@ COPY packages ./packages
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
+# Generate Prisma Client (needed for shared packages)
+RUN pnpm --filter @furniture/prisma generate
+
 # Build the application
 RUN pnpm --filter @furniture/web build
 

@@ -98,6 +98,49 @@ html, body {
   box-shadow: var(--shadow); padding: 16px; width: 520px; max-width: calc(100vw - 32px);
 }
 
+/* RTL-specific improvements */
+input, textarea, select {
+  direction: rtl;
+  text-align: right;
+}
+input[type="number"] {
+  text-align: left; /* Numbers are better left-aligned */
+}
+table {
+  direction: rtl;
+}
+th, td {
+  text-align: right;
+}
+th:first-child, td:first-child {
+  text-align: right;
+}
+th:last-child, td:last-child {
+  text-align: left;
+}
+
+/* RTL spacing adjustments */
+.nav-link {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+
+/* RTL modal positioning */
+.modal {
+  direction: rtl;
+  text-align: right;
+}
+
+/* RTL form elements */
+label {
+  text-align: right;
+  display: block;
+}
+
 /* Print styles */
 @media print {
   body { background: #fff; }

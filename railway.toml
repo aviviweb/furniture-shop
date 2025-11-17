@@ -2,13 +2,13 @@
 name = "furniture-saas"
 
 [services.api]
-path = "backend"
-build = "pnpm --filter @furniture/api build"
+path = "."
+build = "pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/api build"
 start = "pnpm --filter @furniture/api start"
 
 [services.web]
-path = "frontend"
-build = "pnpm --filter @furniture/web build"
+path = "."
+build = "pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/web build"
 start = "pnpm --filter @furniture/web start"
 
 [services.worker]

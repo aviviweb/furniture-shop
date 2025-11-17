@@ -9,6 +9,7 @@ COPY apps ./apps
 COPY packages ./packages
 
 RUN pnpm install --frozen-lockfile
+RUN pnpm --filter @furniture/prisma generate
 RUN pnpm --filter @furniture/api build
 
 EXPOSE 4000

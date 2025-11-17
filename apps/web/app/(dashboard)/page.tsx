@@ -41,8 +41,8 @@ export default function DashboardPage() {
             <a className="btn" href="/products">🛒 ניהול מוצרים</a>
             <button className="btn" onClick={()=> setOpenOrd(true)}>📦 הזמנת עבודה</button>
             <a className="btn" href="/settings/branding">🎨 מיתוג</a>
-            <a className="btn" href="/superadmin">🔧 Super Admin</a>
-            <button className="btn" onClick={reset}>♻️ Reset Demo</button>
+            <a className="btn" href="/superadmin">🔧 מנהל מערכת</a>
+            <button className="btn" onClick={reset}>♻️ איפוס דמו</button>
           </div>
         </section>
 

@@ -9,7 +9,7 @@ export default function SuperAdminPage() {
   const [admin, setAdmin] = useState<boolean>(()=> (typeof window !== 'undefined' && localStorage.getItem('admin-mode') === 'true'));
   return (
     <section className="card" style={{ display:'grid', gap: 12, maxWidth: 520 }}>
-      <h1 className="text-3xl" style={{ marginTop: 0, marginBottom: 8 }}>Super Admin</h1>
+      <h1 className="text-3xl" style={{ marginTop: 0, marginBottom: 8 }}>מנהל מערכת</h1>
       <input value={tenantId} onChange={(e)=> setTenantId(e.target.value)} placeholder="tenantId" />
       <label><input type="checkbox" checked={demo} onChange={(e)=> setDemo(e.target.checked)} /> מצב דמו</label>
       <button className="btn" onClick={async ()=> {
