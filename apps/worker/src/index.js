@@ -7,7 +7,9 @@ if (!process.env.REDIS_URL) {
   process.exit(1);
 }
 
-const connection = new IORedis(process.env.REDIS_URL);
+const connection = new IORedis(process.env.REDIS_URL, {
+  maxRetriesPerRequest: null, // Required by BullMQ
+});
 
 // bootstrap minimal queues so Railway can start the worker
 export const ocrQueue = new Queue('ocr', { connection });
