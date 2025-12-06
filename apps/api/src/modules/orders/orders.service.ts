@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { isDemoMode } from '../shared/demo-mode';
 
 @Injectable()
 export class OrdersService {
@@ -7,7 +8,7 @@ export class OrdersService {
 
   async create(companyId: string, items: { variantId: string; qty: number; price: number }[]) {
     const total = items.reduce((s, i) => s + i.qty * i.price, 0);
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (isDemo) {
       return {
         id: `ord-demo-${Date.now()}`,

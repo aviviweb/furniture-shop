@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { isDemoMode } from '../shared/demo-mode';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   async list(companyId: string) {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     
     // תמיד להשתמש ב-prisma - ב-demo mode זה יחזיר את ה-mock data
     return this.prisma.product

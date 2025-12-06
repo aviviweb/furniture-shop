@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Queue } from 'bullmq';
 import IORedis from 'ioredis';
+import { isDemoMode } from '../shared/demo-mode';
 
 @Injectable()
 export class ExpensesService {
   private ocrQueue: Queue;
   constructor(private prisma: PrismaService) {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (!isDemo) {
       const connection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379');
       this.ocrQueue = new Queue('ocr', { connection });
@@ -15,7 +16,7 @@ export class ExpensesService {
   }
 
   async upload(companyId: string, fileUrl: string) {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (isDemo) {
       return { id: 'demo-expense', companyId, fileUrl } as any;
     }

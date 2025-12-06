@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { isDemoMode } from '../shared/demo-mode';
 
 function round2(n: number) { return Math.round(n * 100) / 100; }
 
@@ -9,7 +10,7 @@ export class InvoicesService {
   constructor(private prisma: PrismaService) {}
 
   async nextInvoiceNumber(companyId: string, type: 'TAX' | 'TAX_RECEIPT' | 'PROFORMA' | 'CREDIT') {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (isDemo) {
       const key = `${companyId || 'demo-company'}:${type}`;
       const n = Number((global as any)[`seq_${key}`] || 0) + 1;
@@ -40,7 +41,7 @@ export class InvoicesService {
 
     if (needsAllocation && !allocation) throw new BadRequestException('allocationNumber required');
 
-    if ((process.env.DEMO_MODE ?? 'true') !== 'false') {
+    if (isDemoMode()) {
       const number = await this.nextInvoiceNumber(companyId, params.type);
       return {
         id: `inv-demo-${Date.now()}`,

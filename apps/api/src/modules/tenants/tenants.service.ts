@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { isDemoMode } from '../shared/demo-mode';
 
 @Injectable()
 export class TenantsService {
   constructor(private prisma: PrismaService) {}
 
   async getCompanyByTenant(tenantId: string) {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (isDemo) {
       return {
         id: 'demo-company',
@@ -35,7 +36,7 @@ export class TenantsService {
   }
 
   async updateBranding(tenantId: string, data: any) {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (isDemo) {
       return { ok: true, message: 'Demo mode - saved to localStorage' };
     }

@@ -266,13 +266,15 @@ function createDemoPrismaMock(): PrismaClientLike {
   };
 }
 
+import { isDemoMode } from '../shared/demo-mode';
+
 @Injectable()
 export class PrismaService implements OnModuleInit, OnModuleDestroy {
   private client: PrismaClientLike;
   [key: string]: any;
 
   constructor() {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (isDemo) {
       this.client = createDemoPrismaMock();
     } else {

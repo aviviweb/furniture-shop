@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/app.module';
+import { isDemoMode } from './modules/shared/demo-mode';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,7 +20,7 @@ async function bootstrap() {
   });
   
   app.setGlobalPrefix('api');
-  const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+  const isDemo = isDemoMode();
   // Allow overriding port even in demo mode to avoid conflicts
   const port = process.env.PORT ? Number(process.env.PORT) : 4000;
   await app.listen(port);

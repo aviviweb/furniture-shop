@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import IORedis from 'ioredis';
+import { isDemoMode } from '../shared/demo-mode';
 
 @Injectable()
 export class ReportsService {
   private queue: Queue;
   constructor() {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (!isDemo) {
       const connection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379');
       this.queue = new Queue('ai-reports', { connection });
@@ -14,7 +15,7 @@ export class ReportsService {
   }
 
   async generate(companyId: string, reportType: string) {
-    const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+    const isDemo = isDemoMode();
     if (isDemo) {
       return { jobId: 'demo-job' };
     }

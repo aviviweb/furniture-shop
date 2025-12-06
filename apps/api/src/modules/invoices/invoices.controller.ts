@@ -1,5 +1,6 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
+import { isDemoMode } from '../shared/demo-mode';
 
 @Controller('invoices')
 export class InvoicesController {
@@ -12,7 +13,7 @@ export class InvoicesController {
       const invoice = await this.invoices.createInvoice({ companyId, ...body });
       return invoice;
     } catch (e: any) {
-      const isDemo = (process.env.DEMO_MODE ?? 'true') !== 'false';
+      const isDemo = isDemoMode();
       if (isDemo) {
         // surface error details in demo to speed debugging
         return { error: e?.message || String(e), stack: e?.stack || null } as any;
