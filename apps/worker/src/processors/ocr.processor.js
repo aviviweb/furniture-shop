@@ -2,7 +2,9 @@ import { Worker } from 'bullmq';
 import IORedis from 'ioredis';
 import { PrismaClient } from '@prisma/client';
 
-const connection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379');
+const connection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  maxRetriesPerRequest: null, // Required by BullMQ
+});
 
 // Initialize Prisma Client only if DATABASE_URL is available
 let prisma = null;

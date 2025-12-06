@@ -6,8 +6,18 @@ export class ReportsController {
   constructor(private reports: ReportsService) {}
 
   @Post('generate')
-  generate(@Req() req: any, @Body() body: { type: string }) {
-    return this.reports.generate(req.tenantId, body.type);
+  generate(
+    @Req() req: any,
+    @Body() body: {
+      type: string;
+      dateFrom?: string;
+      dateTo?: string;
+    },
+  ) {
+    return this.reports.generate(req.tenantId, body.type, {
+      dateFrom: body.dateFrom ? new Date(body.dateFrom) : undefined,
+      dateTo: body.dateTo ? new Date(body.dateTo) : undefined,
+    });
   }
 }
 

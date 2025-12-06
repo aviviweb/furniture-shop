@@ -21,26 +21,27 @@
     "demo:up": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$ports=@(4000,4010,3000,3001,3002,3010); foreach($p in $ports){$processId=(Get-NetTCPConnection -LocalPort $p -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique); if($processId){Stop-Process -Id $processId -Force}}; $env:DEMO_MODE='true'; $env:PORT='4010'; Start-Process -NoNewWindow cmd -ArgumentList '/c','pnpm --filter @furniture/api start' -WorkingDirectory 'C:\\dev\\furniture-shop'; Start-Sleep -Seconds 4; $env:NEXT_PUBLIC_DEMO_MODE='true'; $env:NEXT_PUBLIC_TENANT_ID='furniture-demo'; $env:NEXT_PUBLIC_API_URL='http://localhost:4010/api'; $env:PORT='3010'; $env:NODE_ENV='development'; Start-Process -NoNewWindow cmd -ArgumentList '/c','cd apps\\web && pnpm dev -p 3010' -WorkingDirectory 'C:\\dev\\furniture-shop'; Write-Host 'Demo up → Web: http://localhost:3010  |  API: http://localhost:4010/api'\"",
     "smoke:api": "node scripts/smoke.cjs",
     "demo:smoke": "powershell -NoProfile -Command \"$env:API='http://localhost:4010/api'; node scripts/smoke.cjs\"",
-    "deploy:api": "pnpx --yes railway up --service api",
-    "deploy:web": "pnpx --yes railway up --service web",
-    "deploy:worker": "pnpx --yes railway up --service worker",
+    "deploy:api": "railway up --service @furniture/api",
+    "deploy:web": "railway up --service @furniture/web",
+    "deploy:worker": "railway up --service @furniture/worker",
     "deploy:all": "pnpm deploy:api && pnpm deploy:web && pnpm deploy:worker",
     "railway:check": "powershell -NoProfile -ExecutionPolicy Bypass -File ./RAILWAY_CHECK.ps1",
     "railway:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File ./RAILWAY_SETUP.ps1",
-    "railway:migrate": "pnpx --yes railway run --service api pnpm --filter @furniture/prisma migrate deploy",
-    "railway:logs:api": "pnpx --yes railway logs --service api",
-    "railway:logs:web": "pnpx --yes railway logs --service web",
-    "railway:logs:worker": "pnpx --yes railway logs --service worker"
+    "railway:migrate": "railway run --service @furniture/api pnpm --filter @furniture/prisma migrate deploy",
+    "railway:logs:api": "railway logs --service @furniture/api",
+    "railway:logs:web": "railway logs --service @furniture/web",
+    "railway:logs:worker": "railway logs --service @furniture/worker"
   },
   "devDependencies": {
+    "@railway/cli": "^4.12.0",
     "@types/node": "^24.9.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "^19.2.2",
-    "react": "18.3.1",
-    "turbo": "^2.1.1",
-    "typescript": "^5.9.3",
+    "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "node-fetch": "3",
-    "concurrently": "^9.2.1"
+    "react": "18.3.1",
+    "turbo": "^2.1.1",
+    "typescript": "^5.9.3"
   }
 }

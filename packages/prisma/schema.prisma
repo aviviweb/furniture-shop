@@ -30,6 +30,8 @@ model Company {
   notifications    Notification[]
   auditLogs        AuditLog[]
   inventories      Inventory[]
+  inventoryMovements InventoryMovement[]
+  installations    Installation[]
 }
 
 model BrandSettings {
@@ -60,11 +62,17 @@ model Customer {
   email     String?
   phone     String?
   address   String?
+  city      String?
+  zipCode   String?
   vatNumber String?
+  notes     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Company   Company  @relation(fields: [companyId], references: [id])
   orders    Order[]
+
+  @@index([companyId, name])
+  @@index([companyId, email])
 }
 
 model Product {
@@ -87,6 +95,7 @@ model ProductVariant {
   Product    Product     @relation(fields: [productId], references: [id])
   Inventory  Inventory?
   orderItems OrderItem[]
+  inventoryMovements InventoryMovement[]
 
   @@unique([sku])
   @@index([productId])
@@ -199,8 +208,45 @@ model Delivery {
   installerName String?
   Company       Company  @relation(fields: [companyId], references: [id])
   Order         Order    @relation(fields: [orderId], references: [id])
+  installation  Installation?
 
   @@index([companyId, scheduledAt])
+}
+
+model Installation {
+  id            String   @id @default(cuid())
+  companyId     String
+  deliveryId    String   @unique
+  orderId       String
+  scheduledAt   DateTime
+  status        String   @default("scheduled") // 'scheduled', 'in_progress', 'completed', 'cancelled'
+  installerName String?
+  installerPhone String?
+  customerName  String?
+  customerPhone String?
+  customerAddress String?
+  notes         String?
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  Company       Company  @relation(fields: [companyId], references: [id])
+  Delivery      Delivery @relation(fields: [deliveryId], references: [id])
+  images        InstallationImage[]
+
+  @@index([companyId, scheduledAt])
+  @@index([companyId, status])
+}
+
+model InstallationImage {
+  id            String   @id @default(cuid())
+  installationId String
+  type          String   // 'before', 'after', 'other'
+  url           String
+  description   String?
+  uploadedAt    DateTime @default(now())
+  Installation  Installation @relation(fields: [installationId], references: [id], onDelete: Cascade)
+
+  @@index([installationId])
 }
 
 model RoutePlan {
@@ -252,4 +298,24 @@ model Inventory {
   Variant      ProductVariant @relation(fields: [variantId], references: [id])
 
   @@index([companyId])
+}
+
+model InventoryMovement {
+  id           String         @id @default(cuid())
+  companyId    String
+  variantId    String
+  type         String         // 'IN', 'OUT', 'ADJUSTMENT', 'RETURN'
+  quantity     Int
+  previousQty  Int
+  newQty       Int
+  reason       String?
+  referenceId  String?        // ID של Order/Invoice/etc
+  referenceType String?       // 'ORDER', 'INVOICE', 'MANUAL', etc
+  createdBy    String?
+  createdAt    DateTime       @default(now())
+  Company      Company        @relation(fields: [companyId], references: [id])
+  Variant      ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@index([companyId, variantId])
+  @@index([companyId, createdAt])
 }

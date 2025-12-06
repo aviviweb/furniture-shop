@@ -11,6 +11,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               { href: '/', label: 'דשבורד' },
               { href: '/products', label: 'מוצרים' },
               { href: '/inventory', label: 'מלאי' },
+              { href: '/customers', label: 'לקוחות' },
               { href: '/orders', label: 'הזמנות' },
               { href: '/invoices', label: 'חשבוניות' },
               { href: '/expenses', label: 'הוצאות' },

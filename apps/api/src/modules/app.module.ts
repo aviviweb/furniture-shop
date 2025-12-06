@@ -12,9 +12,12 @@ import { ExpensesModule } from './expenses/expenses.module';
 import { DeliveriesModule } from './deliveries/deliveries.module';
 import { ReportsModule } from './reports/reports.module';
 import { SuperAdminModule } from './superadmin/superadmin.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { InstallerModule } from './installer/installer.module';
+import { CustomersModule } from './customers/customers.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, TenantsModule, InvoicesModule, ProductsModule, OrdersModule, ExpensesModule, DeliveriesModule, ReportsModule, SuperAdminModule],
+  imports: [PrismaModule, AuthModule, TenantsModule, InvoicesModule, ProductsModule, OrdersModule, ExpensesModule, DeliveriesModule, ReportsModule, SuperAdminModule, InventoryModule, InstallerModule, CustomersModule],
   controllers: [AppController],
   providers: [AppService],
 })
