@@ -280,7 +280,16 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     } else {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { PrismaClient } = require('@prisma/client');
-      this.client = new PrismaClient();
+      // Configure PrismaClient with connection pooling and better error handling
+      this.client = new PrismaClient({
+        log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+        errorFormat: 'pretty',
+        datasources: {
+          db: {
+            url: process.env.DATABASE_URL,
+          },
+        },
+      });
     }
 
     // Proxy: expose Prisma client API directly on service instance
@@ -295,7 +304,39 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit() {
     if (this.client && typeof this.client.$connect === 'function') {
-      await this.client.$connect();
+      try {
+        // Retry connection with exponential backoff
+        let retries = 5;
+        let delay = 1000;
+        while (retries > 0) {
+          try {
+            await this.client.$connect();
+            console.log('✅ Database connected successfully');
+            return;
+          } catch (error: any) {
+            retries--;
+            if (retries === 0) {
+              console.error('❌ Failed to connect to database after retries:', error?.message || error);
+              // In production, we might want to exit, but for Railway we'll log and continue
+              // The app will work in demo mode if DATABASE_URL is not available
+              if (error?.code === 'ENOTFOUND' || error?.code === 'P1001') {
+                console.error('⚠️ Database connection failed. Check DATABASE_URL environment variable.');
+                console.error('⚠️ Application will continue but may not function correctly.');
+              }
+              throw error;
+            }
+            console.warn(`⚠️ Database connection failed, retrying in ${delay}ms... (${retries} retries left)`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 2; // Exponential backoff
+          }
+        }
+      } catch (error: any) {
+        console.error('❌ Database connection error:', error?.message || error);
+        // Don't throw - let the app start and handle errors gracefully
+        if (error?.code === 'ENOTFOUND') {
+          console.error('⚠️ DNS resolution failed. Check DATABASE_URL hostname.');
+        }
+      }
     }
   }
 

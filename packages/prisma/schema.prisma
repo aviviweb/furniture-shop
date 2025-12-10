@@ -14,7 +14,7 @@ model Company {
   name             String
   vatNumber        String?
   currency         String            @default("ILS")
-  demoMode         Boolean           @default(true)
+  demoMode         Boolean           @default(false)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   brand            BrandSettings?

@@ -27,6 +27,7 @@
     "deploy:all": "pnpm deploy:api && pnpm deploy:web && pnpm deploy:worker",
     "railway:check": "powershell -NoProfile -ExecutionPolicy Bypass -File ./RAILWAY_CHECK.ps1",
     "railway:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File ./RAILWAY_SETUP.ps1",
+    "railway:fix": "powershell -NoProfile -ExecutionPolicy Bypass -File ./fix-railway-auto.ps1",
     "railway:migrate": "railway run --service @furniture/api pnpm --filter @furniture/prisma migrate deploy",
     "railway:logs:api": "railway logs --service @furniture/api",
     "railway:logs:web": "railway logs --service @furniture/web",
