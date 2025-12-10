@@ -75,4 +75,31 @@ export async function apiPatch<T>(path: string, body: any, tenantId?: string): P
   }
 }
 
+export async function apiDelete<T>(path: string, tenantId?: string): Promise<T> {
+  try {
+    const tid = tenantId || getTenantIdForApi();
+    const res = await fetch(`${API_BASE}${path}`, {
+      method: 'DELETE',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'x-tenant-id': tid 
+      },
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('API DELETE error:', errorText);
+      throw new Error(`שגיאת API: ${res.status}`);
+    }
+    // DELETE might return empty body
+    const contentType = res.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      return res.json();
+    }
+    return {} as T;
+  } catch (error) {
+    console.error('API DELETE failed:', error);
+    throw error;
+  }
+}
+
 
