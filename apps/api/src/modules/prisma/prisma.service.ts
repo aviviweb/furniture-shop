@@ -280,13 +280,23 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     } else {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { PrismaClient } = require('@prisma/client');
+      
+      // Validate DATABASE_URL before creating PrismaClient
+      const databaseUrl = process.env.DATABASE_URL;
+      if (!databaseUrl) {
+        console.error('❌ DATABASE_URL is not set!');
+        console.error('⚠️ Please set DATABASE_URL in Railway Dashboard → API Service → Variables');
+        console.error('⚠️ Application will not start without DATABASE_URL');
+        throw new Error('DATABASE_URL environment variable is required. Please set it in Railway Dashboard → API Service → Variables');
+      }
+      
       // Configure PrismaClient with connection pooling and better error handling
       this.client = new PrismaClient({
         log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
         errorFormat: 'pretty',
         datasources: {
           db: {
-            url: process.env.DATABASE_URL,
+            url: databaseUrl,
           },
         },
       });
