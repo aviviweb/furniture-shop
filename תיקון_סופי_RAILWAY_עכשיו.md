@@ -4,6 +4,7 @@
 
 1. **Web Build Failed** - Railway מריץ `pnpm run build` מהשורש במקום Build Command
 2. **API Crashed** - צריך לבדוק את ה-Logs
+3. **Worker Failed** - צריך REDIS_URL ו-DATABASE_URL
 
 ---
 
@@ -106,7 +107,24 @@ NEXT_PUBLIC_API_URL=<תעדכן אחרי שתקבל api-url>/api
 
 ---
 
-### שלב 7: Redeploy הכל
+### שלב 7: תיקון Worker Service
+
+1. **`@furniture/worker`** → **Variables** → **הוסף:**
+   - **`REDIS_URL`** = `redis://...` (מ-Redis Service → Settings → Connection)
+   - **`DATABASE_URL`** = `postgresql://...` (אותו URL כמו ב-API)
+2. **Settings** → **Build** → **Custom Build Command:**
+   ```
+   pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate
+   ```
+3. **Settings** → **Deploy** → **Start Command:**
+   ```
+   pnpm --filter @furniture/worker start
+   ```
+4. **Redeploy** → **בדוק Logs** → צריך לראות: `Worker up with queues: ocr, ai-reports, notifications`
+
+---
+
+### שלב 8: Redeploy הכל
 
 1. **לכל service** → **Deployments** → **"Redeploy"**
 2. **חכה שכל ה-builds מסתיימים**
@@ -140,9 +158,11 @@ NEXT_PUBLIC_API_URL=<תעדכן אחרי שתקבל api-url>/api
 
 - [ ] Web Build Command מוגדר
 - [ ] API Build Command מוגדר
+- [ ] Worker Build Command מוגדר
 - [ ] Web Start Command מוגדר
 - [ ] API Start Command מוגדר
-- [ ] Environment Variables מוגדרים
+- [ ] Worker Start Command מוגדר
+- [ ] Environment Variables מוגדרים (כולל REDIS_URL ל-Worker)
 - [ ] Migrations רצו
 - [ ] Redeploy בוצע
 
