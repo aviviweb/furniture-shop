@@ -35,7 +35,6 @@
     "railway:logs:worker": "railway logs --service @furniture/worker"
   },
   "devDependencies": {
-    "@railway/cli": "^4.12.0",
     "@types/node": "^24.9.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "^19.2.2",
@@ -45,5 +44,8 @@
     "react": "18.3.1",
     "turbo": "^2.1.1",
     "typescript": "^5.9.3"
+  },
+  "optionalDependencies": {
+    "@railway/cli": "^4.12.0"
   }
 }
