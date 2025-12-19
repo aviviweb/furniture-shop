@@ -1,20 +1,6 @@
 services:
-  # PostgreSQL Database
-  - type: pspg
-    name: furniture-db
-    databaseName: furniture
-    databaseUser: furniture_user
-    region: oregon
-    plan: free
-    postgresMajorVersion: 18
-
-  # Redis (Key Value)
-  - type: redis
-    name: furniture-redis
-    region: oregon
-    plan: free
-    maxmemoryPolicy: allkeys-lru
-
+  # NOTE: furniture-db and furniture-redis already exist - they will be linked manually
+  
   # Web Service (Next.js)
   - type: web
     name: furniture-web
