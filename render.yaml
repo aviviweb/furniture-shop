@@ -1,0 +1,89 @@
+services:
+  # PostgreSQL Database
+  - type: pspg
+    name: furniture-db
+    databaseName: furniture
+    databaseUser: furniture_user
+    region: oregon
+    plan: free
+    postgresMajorVersion: 18
+
+  # Redis (Key Value)
+  - type: redis
+    name: furniture-redis
+    region: oregon
+    plan: free
+    maxmemoryPolicy: allkeys-lru
+
+  # Web Service (Next.js)
+  - type: web
+    name: furniture-web
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/web build
+    startCommand: pnpm --filter @furniture/web start
+    envVars:
+      - key: NEXT_PUBLIC_TENANT_ID
+        value: furniture-demo
+      - key: NEXT_PUBLIC_BRAND_NAME
+        value: Furniture Shop
+      - key: NEXT_PUBLIC_PRIMARY_COLOR
+        value: "#0ea5e9"
+      - key: NEXT_PUBLIC_DEMO_MODE
+        value: "false"
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      # NOTE: NEXT_PUBLIC_API_URL will be set manually after API is deployed
+
+  # API Service (NestJS)
+  - type: web
+    name: furniture-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/api build
+    startCommand: pnpm --filter @furniture/api start
+    envVars:
+      - key: DEMO_MODE
+        value: "false"
+      - key: JWT_SECRET
+        sync: false
+      - key: PORT
+        value: "4000"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: furniture-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: furniture-redis
+          type: redis
+          property: connectionString
+      # NOTE: FRONTEND_URL will be set manually after Web is deployed
+
+  # Worker Service (Background Worker)
+  - type: worker
+    name: furniture-worker
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate
+    startCommand: pnpm --filter @furniture/worker start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REDIS_URL
+        fromService:
+          name: furniture-redis
+          type: redis
+          property: connectionString
+      - key: DATABASE_URL
+        fromDatabase:
+          name: furniture-db
+          property: connectionString
+
