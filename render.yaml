@@ -7,7 +7,7 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/web build
+    buildCommand: corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/web build
     startCommand: pnpm --filter @furniture/web start
     envVars:
       - key: NEXT_PUBLIC_TENANT_ID
@@ -30,7 +30,7 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/api build
+    buildCommand: corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/api build
     startCommand: pnpm --filter @furniture/api start
     envVars:
       - key: DEMO_MODE
@@ -58,7 +58,7 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate
+    buildCommand: corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate
     startCommand: pnpm --filter @furniture/worker start
     envVars:
       - key: NODE_ENV
