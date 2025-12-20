@@ -32,6 +32,7 @@ services:
     plan: free
     buildCommand: corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @furniture/prisma generate && pnpm --filter @furniture/api build
     startCommand: pnpm --filter @furniture/api start
+    preDeployCommand: pnpm --filter @furniture/prisma migrate deploy
     envVars:
       - key: DEMO_MODE
         value: "false"
