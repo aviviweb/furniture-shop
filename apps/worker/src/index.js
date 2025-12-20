@@ -35,4 +35,29 @@ try {
   process.exit(1);
 }
 
+// Start a simple HTTP server to satisfy Render's port requirement
+// This doesn't affect the worker functionality - it just keeps the process alive
+const port = process.env.PORT || 5000;
+import('http').then((http) => {
+  const server = http.default.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      status: 'ok', 
+      service: 'worker',
+      queues: ['ocr', 'ai-reports', 'notifications']
+    }));
+  });
+  
+  server.listen(port, () => {
+    console.log(`Worker HTTP server listening on port ${port} (for Render health checks)`);
+  });
+  
+  server.on('error', (err) => {
+    console.error('HTTP server error:', err);
+  });
+}).catch((err) => {
+  console.error('Failed to start HTTP server:', err);
+  // Don't exit - worker can still function without HTTP server
+});
+
 
