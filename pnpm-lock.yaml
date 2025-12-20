@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@railway/cli':
-        specifier: ^4.12.0
-        version: 4.12.0
       '@types/node':
         specifier: ^24.9.1
         version: 24.9.1
@@ -304,9 +301,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@napi-rs/triples@1.2.0':
-    resolution: {integrity: sha512-HAPjR3bnCsdXBsATpDIP5WCrw0JcACwhhrwIAQhiR46n+jm+a2F8kBsfseAuWtSyQ+H3Yebt2k43B5dy+04yMA==}
-
   '@nestjs/cli@10.4.9':
     resolution: {integrity: sha512-s8qYd97bggqeK7Op3iD49X2MpFtW4LVNLAwXFkfbRxKME6IYT7X0muNTJ2+QfI8hpbNx9isWkrLWIp+g5FOhiA==}
     engines: {node: '>= 16.14'}
@@ -486,11 +480,6 @@ packages:
 
   '@prisma/get-platform@5.22.0':
     resolution: {integrity: sha512-pHhpQdr1UPFpt+zFfnPazhulaZYCUqeIcPpJViYoq9R+D/yw4fjE+CtnsnKzPYm0ddUbeXUzjGVGIRVgPDCk4Q==}
-
-  '@railway/cli@4.12.0':
-    resolution: {integrity: sha512-XhWIVkMBpGavAq+CXhGrc5iJGAhfXXRCBQ750p9QntVfCyOpFIIiwwbM7vHoGD8Gp2tYDYUZHxf2cuJ2tvjkpg==}
-    engines: {node: '>=16.0.0'}
-    hasBin: true
 
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
@@ -810,10 +799,6 @@ packages:
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
-
-  chownr@2.0.0:
-    resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
-    engines: {node: '>=10'}
 
   chrome-trace-event@1.0.4:
     resolution: {integrity: sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==}
@@ -1213,10 +1198,6 @@ packages:
     resolution: {integrity: sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==}
     engines: {node: '>=12'}
 
-  fs-minipass@2.1.0:
-    resolution: {integrity: sha512-V/JgOLFCS+R6Vcq0slCuaeWEdNC3ouDlJMNIsacH2VtALiu9mV4LPrHc5cDl8k5aw6J8jwgWWpiTo5RYhmIzvg==}
-    engines: {node: '>= 8'}
-
   fs-monkey@1.1.0:
     resolution: {integrity: sha512-QMUezzXWII9EV5aTFXW1UBVUO77wYPpjqIF8/AviUCThNeSYZykpoTixUeaNNBwmCev0AMDWMAni+f8Hxb1IFw==}
 
@@ -1558,29 +1539,12 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  minipass@3.3.6:
-    resolution: {integrity: sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw==}
-    engines: {node: '>=8'}
-
-  minipass@5.0.0:
-    resolution: {integrity: sha512-3FnjYuehv9k6ovOEbyOswadCDPX1piCfhV8ncmYtHOjuPwylVWsghTLo7rabjC3Rx5xD4HDx8Wm1xnMF7S5qFQ==}
-    engines: {node: '>=8'}
-
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
 
-  minizlib@2.1.2:
-    resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
-    engines: {node: '>= 8'}
-
   mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
-    hasBin: true
-
-  mkdirp@1.0.4:
-    resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
-    engines: {node: '>=10'}
     hasBin: true
 
   ms@2.0.0:
@@ -2058,10 +2022,6 @@ packages:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
     engines: {node: '>=6'}
 
-  tar@6.2.1:
-    resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
-    engines: {node: '>=10'}
-
   terser-webpack-plugin@5.3.14:
     resolution: {integrity: sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw==}
     engines: {node: '>= 10.13.0'}
@@ -2313,9 +2273,6 @@ packages:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
     engines: {node: '>=10'}
 
-  yallist@4.0.0:
-    resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
-
   yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
     engines: {node: '>=12'}
@@ -2478,8 +2435,6 @@ snapshots:
 
   '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3':
     optional: true
-
-  '@napi-rs/triples@1.2.0': {}
 
   '@nestjs/cli@10.4.9':
     dependencies:
@@ -2663,12 +2618,6 @@ snapshots:
   '@prisma/get-platform@5.22.0':
     dependencies:
       '@prisma/debug': 5.22.0
-
-  '@railway/cli@4.12.0':
-    dependencies:
-      '@napi-rs/triples': 1.2.0
-      node-fetch: 3.3.2
-      tar: 6.2.1
 
   '@swc/counter@0.1.3': {}
 
@@ -3058,8 +3007,6 @@ snapshots:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
-
-  chownr@2.0.0: {}
 
   chrome-trace-event@1.0.4: {}
 
@@ -3492,10 +3439,6 @@ snapshots:
       jsonfile: 6.2.0
       universalify: 2.0.1
 
-  fs-minipass@2.1.0:
-    dependencies:
-      minipass: 3.3.6
-
   fs-monkey@1.1.0: {}
 
   fs.realpath@1.0.0: {}
@@ -3841,24 +3784,11 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  minipass@3.3.6:
-    dependencies:
-      yallist: 4.0.0
-
-  minipass@5.0.0: {}
-
   minipass@7.1.2: {}
-
-  minizlib@2.1.2:
-    dependencies:
-      minipass: 3.3.6
-      yallist: 4.0.0
 
   mkdirp@0.5.6:
     dependencies:
       minimist: 1.2.8
-
-  mkdirp@1.0.4: {}
 
   ms@2.0.0: {}
 
@@ -4330,15 +4260,6 @@ snapshots:
 
   tapable@2.3.0: {}
 
-  tar@6.2.1:
-    dependencies:
-      chownr: 2.0.0
-      fs-minipass: 2.1.0
-      minipass: 5.0.0
-      minizlib: 2.1.2
-      mkdirp: 1.0.4
-      yallist: 4.0.0
-
   terser-webpack-plugin@5.3.14(webpack@5.97.1):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
@@ -4571,8 +4492,6 @@ snapshots:
   xtend@4.0.2: {}
 
   y18n@5.0.8: {}
-
-  yallist@4.0.0: {}
 
   yargs-parser@21.1.1: {}
 
