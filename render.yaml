@@ -52,8 +52,8 @@ services:
           property: connectionString
       # NOTE: FRONTEND_URL will be set manually after Web is deployed
 
-  # Worker Service (Background Worker)
-  - type: worker
+  # Worker Service (Background Worker) - Using web type because Free plan doesn't support worker
+  - type: web
     name: furniture-worker
     env: node
     region: oregon
@@ -63,6 +63,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: "5000"
       - key: REDIS_URL
         fromService:
           name: furniture-redis
