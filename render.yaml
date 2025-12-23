@@ -18,6 +18,7 @@ services:
         value: "#0ea5e9"
       - key: NEXT_PUBLIC_DEMO_MODE
         value: "false"
+        # Force disable demo mode for production
       - key: NODE_ENV
         value: production
       - key: PORT
@@ -36,6 +37,7 @@ services:
     envVars:
       - key: DEMO_MODE
         value: "false"
+        # Force disable demo mode for production
       - key: JWT_SECRET
         sync: false
       - key: PORT
