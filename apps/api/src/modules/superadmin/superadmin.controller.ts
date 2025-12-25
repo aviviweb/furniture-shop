@@ -9,11 +9,34 @@ export class SuperAdminController {
   @Patch('toggleDemoMode')
   async toggle(@Body() body: { tenantId: string; demo: boolean }) {
     const isDemo = isDemoMode();
-    if (isDemo) {
-      return { tenantId: body.tenantId, demoMode: body.demo };
+    
+    // Always try to update in database, even if system is in demo mode
+    // This allows users to toggle company-level demo mode independently
+    try {
+      const company = await this.prisma.company.update({ 
+        where: { tenantId: body.tenantId }, 
+        data: { demoMode: body.demo } 
+      });
+      return { 
+        tenantId: company.tenantId, 
+        demoMode: company.demoMode,
+        systemDemoMode: isDemo,
+        message: isDemo 
+          ? 'Company demo mode updated, but system is in demo mode. Set DEMO_MODE=false to fully disable.' 
+          : 'Company demo mode updated successfully'
+      };
+    } catch (error: any) {
+      // If company doesn't exist or update fails, return the requested value
+      // This allows the toggle to work even in full demo mode
+      return { 
+        tenantId: body.tenantId, 
+        demoMode: body.demo,
+        systemDemoMode: isDemo,
+        warning: isDemo 
+          ? 'System is in demo mode. Company not found in database. Set DEMO_MODE=false and ensure company exists in DB.' 
+          : `Failed to update: ${error?.message || 'Unknown error'}`
+      };
     }
-    const company = await this.prisma.company.update({ where: { tenantId: body.tenantId }, data: { demoMode: body.demo } });
-    return { tenantId: company.tenantId, demoMode: company.demoMode };
   }
 
   @Post('resetDemo')

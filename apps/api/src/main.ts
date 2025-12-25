@@ -51,7 +51,10 @@ async function bootstrap() {
   app.enableCors({ 
     origin: allowedOrigins.length > 0 ? allowedOrigins : (process.env.NODE_ENV === 'production' ? false : true),
     // In production, require explicit CORS origins. In development, allow all for easier testing.
-    credentials: true 
+    // Note: Direct browser access (not CORS) should still work
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id'],
   });
   
   app.setGlobalPrefix('api');
