@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { isDemoMode } from '../shared/demo-mode';
 
@@ -241,7 +241,7 @@ export class CustomersService {
     }
 
     if (customer.orders.length > 0) {
-      throw new Error('Cannot delete customer with existing orders');
+      throw new BadRequestException('Cannot delete customer with existing orders');
     }
 
     return this.prisma.customer.delete({

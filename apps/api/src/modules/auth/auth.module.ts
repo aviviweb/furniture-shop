@@ -11,7 +11,10 @@ import { JwtStrategy } from './jwt.strategy';
     PrismaModule,
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'change-me',
+      secret: process.env.JWT_SECRET || (() => {
+        console.warn('⚠️ WARNING: JWT_SECRET is not set. Using default value. This is a security risk!');
+        return 'change-me';
+      })(),
       signOptions: { expiresIn: '7d' },
     }),
   ],

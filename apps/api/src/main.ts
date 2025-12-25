@@ -49,7 +49,8 @@ async function bootstrap() {
   ].filter(Boolean) as string[];
   
   app.enableCors({ 
-    origin: allowedOrigins.length > 0 ? allowedOrigins : true, // Allow all if no URLs specified
+    origin: allowedOrigins.length > 0 ? allowedOrigins : (process.env.NODE_ENV === 'production' ? false : true),
+    // In production, require explicit CORS origins. In development, allow all for easier testing.
     credentials: true 
   });
   

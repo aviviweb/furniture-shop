@@ -1,0 +1,36 @@
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +60ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +3ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mReportsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSuperAdminModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTenantsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mInvoicesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mProductsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mOrdersModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mExpensesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDeliveriesModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/api}:[39m[38;5;3m +29ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api, GET} route[39m[38;5;3m +4ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/api/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/login, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTenantsController {/api/companies}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/companies/me, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mInvoicesController {/api/invoices}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/invoices, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProductsController {/api/products}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/products, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/products, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mOrdersController {/api/orders}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/orders, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mExpensesController {/api/expenses}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/expenses/scan, POST} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mDeliveriesController {/api/deliveries}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/deliveries/optimize, POST} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mReportsController {/api/reports}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/reports/generate, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSuperAdminController {/api/superadmin}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/superadmin/toggleDemoMode, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 10648  - [39m25.10.2025, 20:11:13 [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +8ms[39m

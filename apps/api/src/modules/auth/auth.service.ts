@@ -10,7 +10,23 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) throw new UnauthorizedException('invalid credentials');
-    const ok = user.password.startsWith('$2') ? await bcrypt.compare(password, user.password) : user.password === password;
+    
+    // Security: Only allow bcrypt hashed passwords in production
+    // Plain text passwords are only allowed in demo mode for development
+    const isDemo = process.env.DEMO_MODE === 'true';
+    const isHashed = user.password.startsWith('$2');
+    
+    let ok = false;
+    if (isHashed) {
+      ok = await bcrypt.compare(password, user.password);
+    } else if (isDemo) {
+      // Only allow plain text comparison in demo mode
+      ok = user.password === password;
+    } else {
+      // In production, reject plain text passwords
+      throw new UnauthorizedException('invalid credentials');
+    }
+    
     if (!ok) throw new UnauthorizedException('invalid credentials');
     return user;
   }
