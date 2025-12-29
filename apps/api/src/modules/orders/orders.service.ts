@@ -107,6 +107,46 @@ export class OrdersService {
       return order;
     });
   }
+
+  async list(companyId: string) {
+    const isDemo = isDemoMode();
+    
+    if (isDemo) {
+      return [
+        {
+          id: 'ord-demo-1',
+          companyId,
+          total: 5000,
+          status: 'pending',
+          createdAt: new Date(),
+        },
+        {
+          id: 'ord-demo-2',
+          companyId,
+          total: 3000,
+          status: 'completed',
+          createdAt: new Date(),
+        },
+      ];
+    }
+
+    return this.prisma.order.findMany({
+      where: { companyId },
+      include: {
+        Customer: true,
+        items: {
+          include: {
+            Variant: {
+              include: {
+                Product: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }
 
 
