@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from 'react';
-import { apiGet, apiPatch } from '../../../lib/api';
+import { apiGet, apiPatch, apiPost } from '../../../lib/api';
 import { showToast } from '../../toast';
 import Link from 'next/link';
 
@@ -29,10 +29,62 @@ export default function DeliveriesPage() {
   const [dateTo, setDateTo] = useState('');
   const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(null);
   const [editData, setEditData] = useState<{ status?: string; driverName?: string; installerName?: string }>({});
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [createFormData, setCreateFormData] = useState({
+    orderId: '',
+    scheduledAt: '',
+    driverName: '',
+    installerName: '',
+    baseShippingCost: 0,
+    shippingDistanceCost: 0,
+    shippingFloorCost: 0,
+    shippingComplexityCost: 0,
+    baseAssemblyCost: 0,
+    assemblyComplexityCost: 0,
+  });
+  const [orders, setOrders] = useState<Array<{ id: string; total: number; customerId?: string }>>([]);
 
   useEffect(() => {
     loadDeliveries();
+    loadOrders();
   }, [filterStatus, dateFrom, dateTo]);
+
+  const loadOrders = async () => {
+    try {
+      const data = await apiGet<Array<{ id: string; total: number; customerId?: string }>>('/orders');
+      setOrders(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Failed to load orders:', error);
+    }
+  };
+
+  const handleCreateDelivery = async () => {
+    if (!createFormData.orderId || !createFormData.scheduledAt) {
+      showToast('יש למלא הזמנה ותאריך');
+      return;
+    }
+    try {
+      await apiPost('/deliveries', createFormData);
+      showToast('משלוח נוצר בהצלחה');
+      setShowCreateForm(false);
+      setCreateFormData({
+        orderId: '',
+        scheduledAt: '',
+        driverName: '',
+        installerName: '',
+        baseShippingCost: 0,
+        shippingDistanceCost: 0,
+        shippingFloorCost: 0,
+        shippingComplexityCost: 0,
+        baseAssemblyCost: 0,
+        assemblyComplexityCost: 0,
+      });
+      loadDeliveries();
+    } catch (error: any) {
+      console.error('Failed to create delivery:', error);
+      showToast(error?.message || 'שגיאה ביצירת המשלוח');
+    }
+  };
 
   const loadDeliveries = async () => {
     try {
@@ -101,10 +153,133 @@ export default function DeliveriesPage() {
     <section className="card" style={{ display: 'grid', gap: 16 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <h1 className="text-3xl" style={{ marginTop: 0, marginBottom: 0 }}>משלוחים/הרכבות</h1>
-        <button className="btn" onClick={() => loadDeliveries()}>
-          רענון
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn" onClick={() => { setShowCreateForm(true); }}>
+            + צור משלוח חדש
+          </button>
+          <button className="btn" onClick={() => loadDeliveries()}>
+            רענון
+          </button>
+        </div>
       </div>
+
+      {showCreateForm && (
+        <div style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: 16, background: '#fff' }}>
+          <h2 style={{ marginTop: 0 }}>צור משלוח חדש</h2>
+          <div style={{ display: 'grid', gap: 16 }}>
+            <label style={{ display: 'grid', gap: 4 }}>
+              הזמנה
+              <select
+                value={createFormData.orderId}
+                onChange={(e) => setCreateFormData({ ...createFormData, orderId: e.target.value })}
+              >
+                <option value="">בחר הזמנה</option>
+                {orders.map((order) => (
+                  <option key={order.id} value={order.id}>
+                    הזמנה #{order.id} - ₪{Number(order.total).toLocaleString('he-IL')}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label style={{ display: 'grid', gap: 4 }}>
+              תאריך ושעה מתוכננים
+              <input
+                type="datetime-local"
+                value={createFormData.scheduledAt}
+                onChange={(e) => setCreateFormData({ ...createFormData, scheduledAt: e.target.value })}
+              />
+            </label>
+            <label style={{ display: 'grid', gap: 4 }}>
+              שם נהג
+              <input
+                type="text"
+                value={createFormData.driverName}
+                onChange={(e) => setCreateFormData({ ...createFormData, driverName: e.target.value })}
+              />
+            </label>
+            <label style={{ display: 'grid', gap: 4 }}>
+              שם מתקין
+              <input
+                type="text"
+                value={createFormData.installerName}
+                onChange={(e) => setCreateFormData({ ...createFormData, installerName: e.target.value })}
+              />
+            </label>
+            <div>
+              <h3 style={{ margin: '0 0 8px 0' }}>עלויות משלוח</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 8 }}>
+                <label style={{ display: 'grid', gap: 4 }}>
+                  בסיס (₪)
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={createFormData.baseShippingCost}
+                    onChange={(e) => setCreateFormData({ ...createFormData, baseShippingCost: parseFloat(e.target.value) || 0 })}
+                  />
+                </label>
+                <label style={{ display: 'grid', gap: 4 }}>
+                  מרחק (₪)
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={createFormData.shippingDistanceCost}
+                    onChange={(e) => setCreateFormData({ ...createFormData, shippingDistanceCost: parseFloat(e.target.value) || 0 })}
+                  />
+                </label>
+                <label style={{ display: 'grid', gap: 4 }}>
+                  קומה (₪)
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={createFormData.shippingFloorCost}
+                    onChange={(e) => setCreateFormData({ ...createFormData, shippingFloorCost: parseFloat(e.target.value) || 0 })}
+                  />
+                </label>
+                <label style={{ display: 'grid', gap: 4 }}>
+                  מורכבות (₪)
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={createFormData.shippingComplexityCost}
+                    onChange={(e) => setCreateFormData({ ...createFormData, shippingComplexityCost: parseFloat(e.target.value) || 0 })}
+                  />
+                </label>
+              </div>
+            </div>
+            <div>
+              <h3 style={{ margin: '0 0 8px 0' }}>עלויות הרכבה</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <label style={{ display: 'grid', gap: 4 }}>
+                  בסיס (₪)
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={createFormData.baseAssemblyCost}
+                    onChange={(e) => setCreateFormData({ ...createFormData, baseAssemblyCost: parseFloat(e.target.value) || 0 })}
+                  />
+                </label>
+                <label style={{ display: 'grid', gap: 4 }}>
+                  מורכבות (₪)
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={createFormData.assemblyComplexityCost}
+                    onChange={(e) => setCreateFormData({ ...createFormData, assemblyComplexityCost: parseFloat(e.target.value) || 0 })}
+                  />
+                </label>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button className="btn" onClick={handleCreateDelivery}>
+                צור משלוח
+              </button>
+              <button className="btn" onClick={() => { setShowCreateForm(false); }}>
+                ביטול
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filters */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 180px 160px 160px', gap: 8 }}>
