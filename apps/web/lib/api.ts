@@ -10,13 +10,55 @@ function getTenantIdForApi(): string {
   return getTenantId();
 }
 
+/**
+ * Get JWT token from localStorage
+ */
+function getAuthToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('token');
+}
+
+/**
+ * Get headers for API calls (includes auth token if available)
+ */
+function getApiHeaders(tenantId: string): HeadersInit {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    'x-tenant-id': tenantId,
+  };
+  
+  const token = getAuthToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  return headers;
+}
+
 export async function apiGet<T>(path: string, tenantId?: string): Promise<T> {
   try {
     const tid = tenantId || getTenantIdForApi();
+    const token = getAuthToken();
+    const headers: HeadersInit = { 'x-tenant-id': tid };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const res = await fetch(`${API_BASE}${path}`, { 
       cache: 'no-store', 
-      headers: { 'x-tenant-id': tid } 
+      headers
     });
+    
+    if (res.status === 401) {
+      // Unauthorized - clear token and redirect to login
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        window.location.href = '/login';
+      }
+      throw new Error('נדרשת התחברות מחדש');
+    }
+    
     if (!res.ok) {
       const errorText = await res.text();
       console.error('API GET error:', errorText);
@@ -32,14 +74,23 @@ export async function apiGet<T>(path: string, tenantId?: string): Promise<T> {
 export async function apiPost<T>(path: string, body: any, tenantId?: string): Promise<T> {
   try {
     const tid = tenantId || getTenantIdForApi();
+    const headers = getApiHeaders(tid);
+    
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'x-tenant-id': tid 
-      },
+      headers,
       body: JSON.stringify(body),
     });
+    
+    if (res.status === 401) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        window.location.href = '/login';
+      }
+      throw new Error('נדרשת התחברות מחדש');
+    }
+    
     if (!res.ok) {
       const errorText = await res.text();
       console.error('API POST error:', errorText);
@@ -55,14 +106,23 @@ export async function apiPost<T>(path: string, body: any, tenantId?: string): Pr
 export async function apiPatch<T>(path: string, body: any, tenantId?: string): Promise<T> {
   try {
     const tid = tenantId || getTenantIdForApi();
+    const headers = getApiHeaders(tid);
+    
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'PATCH',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'x-tenant-id': tid 
-      },
+      headers,
       body: JSON.stringify(body),
     });
+    
+    if (res.status === 401) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        window.location.href = '/login';
+      }
+      throw new Error('נדרשת התחברות מחדש');
+    }
+    
     if (!res.ok) {
       const errorText = await res.text();
       console.error('API PATCH error:', errorText);
@@ -78,13 +138,22 @@ export async function apiPatch<T>(path: string, body: any, tenantId?: string): P
 export async function apiDelete<T>(path: string, tenantId?: string): Promise<T> {
   try {
     const tid = tenantId || getTenantIdForApi();
+    const headers = getApiHeaders(tid);
+    
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'DELETE',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'x-tenant-id': tid 
-      },
+      headers,
     });
+    
+    if (res.status === 401) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        window.location.href = '/login';
+      }
+      throw new Error('נדרשת התחברות מחדש');
+    }
+    
     if (!res.ok) {
       const errorText = await res.text();
       console.error('API DELETE error:', errorText);
