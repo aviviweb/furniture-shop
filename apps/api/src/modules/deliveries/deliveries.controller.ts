@@ -40,4 +40,33 @@ export class DeliveriesController {
   optimize(@Req() req: any, @Body() body: { stops: { lat: number; lng: number; id: string }[] }) {
     return this.deliveries.optimize(req.tenantId, body.stops);
   }
+
+  @Post()
+  create(
+    @Req() req: any,
+    @Body() body: {
+      orderId: string;
+      scheduledAt: string;
+      driverName?: string;
+      installerName?: string;
+      baseShippingCost?: number;
+      shippingDistanceCost?: number;
+      shippingFloorCost?: number;
+      shippingComplexityCost?: number;
+      baseAssemblyCost?: number;
+      assemblyComplexityCost?: number;
+    },
+  ) {
+    return this.deliveries.create(req.tenantId, body.orderId, {
+      scheduledAt: new Date(body.scheduledAt),
+      driverName: body.driverName,
+      installerName: body.installerName,
+      baseShippingCost: body.baseShippingCost,
+      shippingDistanceCost: body.shippingDistanceCost,
+      shippingFloorCost: body.shippingFloorCost,
+      shippingComplexityCost: body.shippingComplexityCost,
+      baseAssemblyCost: body.baseAssemblyCost,
+      assemblyComplexityCost: body.assemblyComplexityCost,
+    });
+  }
 }

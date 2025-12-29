@@ -51,6 +51,77 @@ export class TenantsService {
     
     return { ok: true };
   }
+
+  async getSettings(tenantId: string) {
+    const isDemo = isDemoMode();
+    if (isDemo) {
+      return {
+        id: 'settings-demo',
+        companyId: 'demo-company',
+        defaultVatRate: 0.17,
+        baseShippingCost: 50,
+        shippingCostPerKm: 2,
+        shippingCostPerFloor: 10,
+        baseAssemblyCost: 100,
+      };
+    }
+
+    const company = await this.prisma.company.findUnique({ where: { tenantId } });
+    if (!company) throw new Error('Company not found');
+
+    let settings = await this.prisma.companySettings.findUnique({
+      where: { companyId: company.id },
+    });
+
+    if (!settings) {
+      // Create default settings
+      settings = await this.prisma.companySettings.create({
+        data: {
+          companyId: company.id,
+          defaultVatRate: 0.17,
+          baseShippingCost: 50,
+          shippingCostPerKm: 2,
+          shippingCostPerFloor: 10,
+          baseAssemblyCost: 100,
+        },
+      });
+    }
+
+    return settings;
+  }
+
+  async updateSettings(tenantId: string, data: {
+    defaultVatRate?: number;
+    baseShippingCost?: number;
+    shippingCostPerKm?: number;
+    shippingCostPerFloor?: number;
+    baseAssemblyCost?: number;
+  }) {
+    const isDemo = isDemoMode();
+    if (isDemo) {
+      return {
+        id: 'settings-demo',
+        companyId: 'demo-company',
+        ...data,
+      };
+    }
+
+    const company = await this.prisma.company.findUnique({ where: { tenantId } });
+    if (!company) throw new Error('Company not found');
+
+    return this.prisma.companySettings.upsert({
+      where: { companyId: company.id },
+      create: {
+        companyId: company.id,
+        defaultVatRate: data.defaultVatRate ?? 0.17,
+        baseShippingCost: data.baseShippingCost ?? 50,
+        shippingCostPerKm: data.shippingCostPerKm ?? 2,
+        shippingCostPerFloor: data.shippingCostPerFloor ?? 10,
+        baseAssemblyCost: data.baseAssemblyCost ?? 100,
+      },
+      update: data,
+    });
+  }
 }
 
 

@@ -6,18 +6,45 @@ import { isDemoMode } from '../shared/demo-mode';
 export class OrdersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(companyId: string, items: { variantId: string; qty: number; price: number }[]) {
+  async create(
+    companyId: string,
+    items: { variantId: string; qty: number; price: number }[],
+    shippingCosts?: {
+      baseShippingCost?: number;
+      shippingDistanceCost?: number;
+      shippingFloorCost?: number;
+      shippingComplexityCost?: number;
+    },
+    assemblyCosts?: {
+      baseAssemblyCost?: number;
+      assemblyComplexityCost?: number;
+    },
+  ) {
     if (!items || items.length === 0) {
       throw new BadRequestException('Order must contain at least one item');
     }
 
-    const total = items.reduce((s, i) => s + i.qty * i.price, 0);
+    const itemsTotal = items.reduce((s, i) => s + i.qty * i.price, 0);
+    const shippingTotal = (shippingCosts?.baseShippingCost || 0) +
+      (shippingCosts?.shippingDistanceCost || 0) +
+      (shippingCosts?.shippingFloorCost || 0) +
+      (shippingCosts?.shippingComplexityCost || 0);
+    const assemblyTotal = (assemblyCosts?.baseAssemblyCost || 0) +
+      (assemblyCosts?.assemblyComplexityCost || 0);
+    const total = itemsTotal + shippingTotal + assemblyTotal;
+
     const isDemo = isDemoMode();
     if (isDemo) {
       return {
         id: `ord-demo-${Date.now()}`,
         companyId: companyId || 'demo-company',
         total,
+        baseShippingCost: shippingCosts?.baseShippingCost || null,
+        shippingDistanceCost: shippingCosts?.shippingDistanceCost || null,
+        shippingFloorCost: shippingCosts?.shippingFloorCost || null,
+        shippingComplexityCost: shippingCosts?.shippingComplexityCost || null,
+        baseAssemblyCost: assemblyCosts?.baseAssemblyCost || null,
+        assemblyComplexityCost: assemblyCosts?.assemblyComplexityCost || null,
         createdAt: new Date(),
       } as any;
     }
@@ -47,7 +74,18 @@ export class OrdersService {
         }
       }
       
-      const order = await tx.order.create({ data: { companyId, total } });
+      const order = await tx.order.create({
+        data: {
+          companyId,
+          total,
+          baseShippingCost: shippingCosts?.baseShippingCost || null,
+          shippingDistanceCost: shippingCosts?.shippingDistanceCost || null,
+          shippingFloorCost: shippingCosts?.shippingFloorCost || null,
+          shippingComplexityCost: shippingCosts?.shippingComplexityCost || null,
+          baseAssemblyCost: assemblyCosts?.baseAssemblyCost || null,
+          assemblyComplexityCost: assemblyCosts?.assemblyComplexityCost || null,
+        },
+      });
       
       for (const i of items) {
         await tx.orderItem.create({ 

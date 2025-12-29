@@ -6,8 +6,23 @@ export class OrdersController {
   constructor(private orders: OrdersService) {}
 
   @Post()
-  create(@Req() req: any, @Body() body: { items: { variantId: string; qty: number; price: number }[] }) {
-    return this.orders.create(req.tenantId, body.items);
+  create(
+    @Req() req: any,
+    @Body() body: {
+      items: { variantId: string; qty: number; price: number }[];
+      shippingCosts?: {
+        baseShippingCost?: number;
+        shippingDistanceCost?: number;
+        shippingFloorCost?: number;
+        shippingComplexityCost?: number;
+      };
+      assemblyCosts?: {
+        baseAssemblyCost?: number;
+        assemblyComplexityCost?: number;
+      };
+    },
+  ) {
+    return this.orders.create(req.tenantId, body.items, body.shippingCosts, body.assemblyCosts);
   }
 }
 

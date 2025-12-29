@@ -235,4 +235,82 @@ export class DeliveriesService {
       orderBy: { scheduledAt: 'asc' },
     });
   }
+
+  async create(
+    companyId: string,
+    orderId: string,
+    data: {
+      scheduledAt: Date;
+      driverName?: string;
+      installerName?: string;
+      baseShippingCost?: number;
+      shippingDistanceCost?: number;
+      shippingFloorCost?: number;
+      shippingComplexityCost?: number;
+      baseAssemblyCost?: number;
+      assemblyComplexityCost?: number;
+    },
+  ) {
+    const isDemo = isDemoMode();
+    
+    if (isDemo) {
+      return {
+        id: `del-demo-${Date.now()}`,
+        companyId,
+        orderId,
+        scheduledAt: data.scheduledAt,
+        status: 'scheduled',
+        driverName: data.driverName || null,
+        installerName: data.installerName || null,
+        baseShippingCost: data.baseShippingCost || null,
+        shippingDistanceCost: data.shippingDistanceCost || null,
+        shippingFloorCost: data.shippingFloorCost || null,
+        shippingComplexityCost: data.shippingComplexityCost || null,
+        baseAssemblyCost: data.baseAssemblyCost || null,
+        assemblyComplexityCost: data.assemblyComplexityCost || null,
+      };
+    }
+
+    // Verify order belongs to company
+    const order = await this.prisma.order.findFirst({
+      where: { id: orderId, companyId },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return this.prisma.delivery.create({
+      data: {
+        companyId,
+        orderId,
+        scheduledAt: data.scheduledAt,
+        status: 'scheduled',
+        driverName: data.driverName || null,
+        installerName: data.installerName || null,
+        baseShippingCost: data.baseShippingCost || null,
+        shippingDistanceCost: data.shippingDistanceCost || null,
+        shippingFloorCost: data.shippingFloorCost || null,
+        shippingComplexityCost: data.shippingComplexityCost || null,
+        baseAssemblyCost: data.baseAssemblyCost || null,
+        assemblyComplexityCost: data.assemblyComplexityCost || null,
+      },
+      include: {
+        Order: {
+          include: {
+            Customer: true,
+            items: {
+              include: {
+                Variant: {
+                  include: {
+                    Product: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }

@@ -15,6 +15,25 @@ export class TenantsController {
   async updateBranding(@Req() req: any, @Body() body: any) {
     return await this.tenants.updateBranding(req.tenantId, body);
   }
+
+  @Get('settings')
+  async getSettings(@Req() req: any) {
+    return await this.tenants.getSettings(req.tenantId);
+  }
+
+  @Patch('settings')
+  async updateSettings(
+    @Req() req: any,
+    @Body() body: {
+      defaultVatRate?: number;
+      baseShippingCost?: number;
+      shippingCostPerKm?: number;
+      shippingCostPerFloor?: number;
+      baseAssemblyCost?: number;
+    },
+  ) {
+    return await this.tenants.updateSettings(req.tenantId, body);
+  }
 }
 
 

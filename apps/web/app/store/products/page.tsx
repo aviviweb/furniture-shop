@@ -13,8 +13,16 @@ export default function ProductsPage() {
   const [q, setQ] = useState('');
   const [category, setCategory] = useState('');
   useEffect(() => {
-    apiGet<Product[]>('/products')
-      .then(setItems)
+    // Only show available products (with stock > 0)
+    apiGet<Product[]>('/products?onlyAvailable=true')
+      .then((products) => {
+        // Filter variants to only show those with stock > 0
+        const filtered = products.map(p => ({
+          ...p,
+          variants: p.variants?.filter(v => (v.stock ?? 0) > 0),
+        })).filter(p => p.variants && p.variants.length > 0);
+        setItems(filtered);
+      })
       .catch((error) => {
         console.error('Failed to load products:', error);
         setItems([]);
@@ -95,17 +103,18 @@ export default function ProductsPage() {
               <span style={{ fontWeight: 600 }}>{p.variants?.[0]?.price?.toLocaleString?.() || ''} ₪</span>
               <button 
                 onClick={() => addToCart(p)}
+                disabled={!p.variants?.[0] || (p.variants[0].stock ?? 0) <= 0}
                 style={{ 
                   padding: '6px 12px', 
-                  background: '#0ea5e9', 
+                  background: (!p.variants?.[0] || (p.variants[0].stock ?? 0) <= 0) ? '#ccc' : '#0ea5e9', 
                   color: '#fff', 
                   border: 'none', 
                   borderRadius: 4, 
-                  cursor: 'pointer',
+                  cursor: (!p.variants?.[0] || (p.variants[0].stock ?? 0) <= 0) ? 'not-allowed' : 'pointer',
                   fontSize: 12
                 }}
               >
-                הוסף לעגלה
+                {(!p.variants?.[0] || (p.variants[0].stock ?? 0) <= 0) ? 'אזל מהמלאי' : 'הוסף לעגלה'}
               </button>
               <Link href={`/store/products/${p.id}`} style={{ marginLeft: 'auto', color: '#0ea5e9', fontSize: 14 }}>צפייה</Link>
             </div>

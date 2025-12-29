@@ -18,6 +18,7 @@ model Company {
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   brand            BrandSettings?
+  settings         CompanySettings?
   users            User[]
   customers        Customer[]
   products         Product[]
@@ -32,6 +33,7 @@ model Company {
   inventories      Inventory[]
   inventoryMovements InventoryMovement[]
   installations    Installation[]
+  productAttributes ProductAttribute[]
 }
 
 model BrandSettings {
@@ -80,6 +82,7 @@ model Product {
   companyId   String
   name        String
   description String?
+  imageUrl    String?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   variants    ProductVariant[]
@@ -92,28 +95,37 @@ model ProductVariant {
   sku        String
   price      Decimal     @db.Decimal(10, 2)
   stock      Int         @default(0)
+  imageUrl   String?
+  vatRate    Decimal?    @db.Decimal(4, 2)
   Product    Product     @relation(fields: [productId], references: [id])
   Inventory  Inventory?
   orderItems OrderItem[]
   inventoryMovements InventoryMovement[]
+  attributes ProductVariantAttribute[]
 
   @@unique([sku])
   @@index([productId])
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  companyId  String
-  customerId String?
-  status     String      @default("pending")
-  total      Decimal     @db.Decimal(10, 2)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  items      OrderItem[]
-  Company    Company     @relation(fields: [companyId], references: [id])
-  Customer   Customer?   @relation(fields: [customerId], references: [id])
-  invoices   Invoice[]
-  deliveries Delivery[]
+  id                    String      @id @default(cuid())
+  companyId             String
+  customerId            String?
+  status                String      @default("pending")
+  total                 Decimal     @db.Decimal(10, 2)
+  baseShippingCost      Decimal?    @db.Decimal(10, 2)
+  shippingDistanceCost  Decimal?    @db.Decimal(10, 2)
+  shippingFloorCost     Decimal?    @db.Decimal(10, 2)
+  shippingComplexityCost Decimal?   @db.Decimal(10, 2)
+  baseAssemblyCost      Decimal?    @db.Decimal(10, 2)
+  assemblyComplexityCost Decimal?   @db.Decimal(10, 2)
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  items                 OrderItem[]
+  Company               Company     @relation(fields: [companyId], references: [id])
+  Customer              Customer?   @relation(fields: [customerId], references: [id])
+  invoices              Invoice[]
+  deliveries            Delivery[]
 
   @@index([companyId, customerId])
 }
@@ -199,16 +211,22 @@ model Expense {
 }
 
 model Delivery {
-  id            String   @id @default(cuid())
-  companyId     String
-  orderId       String
-  scheduledAt   DateTime
-  status        String   @default("scheduled")
-  driverName    String?
-  installerName String?
-  Company       Company  @relation(fields: [companyId], references: [id])
-  Order         Order    @relation(fields: [orderId], references: [id])
-  installation  Installation?
+  id                    String   @id @default(cuid())
+  companyId             String
+  orderId               String
+  scheduledAt           DateTime
+  status                String   @default("scheduled")
+  driverName            String?
+  installerName         String?
+  baseShippingCost      Decimal? @db.Decimal(10, 2)
+  shippingDistanceCost  Decimal? @db.Decimal(10, 2)
+  shippingFloorCost     Decimal? @db.Decimal(10, 2)
+  shippingComplexityCost Decimal? @db.Decimal(10, 2)
+  baseAssemblyCost      Decimal? @db.Decimal(10, 2)
+  assemblyComplexityCost Decimal? @db.Decimal(10, 2)
+  Company               Company  @relation(fields: [companyId], references: [id])
+  Order                 Order    @relation(fields: [orderId], references: [id])
+  installation          Installation?
 
   @@index([companyId, scheduledAt])
 }
@@ -318,4 +336,64 @@ model InventoryMovement {
 
   @@index([companyId, variantId])
   @@index([companyId, createdAt])
+}
+
+model CompanySettings {
+  id                    String  @id @default(cuid())
+  companyId             String  @unique
+  defaultVatRate        Decimal @default(0.17) @db.Decimal(4, 2)
+  baseShippingCost      Decimal @default(50) @db.Decimal(10, 2)
+  shippingCostPerKm     Decimal @default(2) @db.Decimal(10, 2)
+  shippingCostPerFloor Decimal @default(10) @db.Decimal(10, 2)
+  baseAssemblyCost      Decimal @default(100) @db.Decimal(10, 2)
+  Company               Company @relation(fields: [companyId], references: [id])
+}
+
+enum AttributeType {
+  PREDEFINED
+  DYNAMIC
+}
+
+model ProductAttribute {
+  id           String                  @id @default(cuid())
+  companyId    String
+  name         String                  // "צבע", "גודל", "חומר", וכו'
+  type         AttributeType           @default(PREDEFINED)
+  isRequired   Boolean                 @default(false)
+  displayOrder Int                     @default(0)
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  Company      Company                 @relation(fields: [companyId], references: [id])
+  values       ProductAttributeValue[]
+  variantAttributes ProductVariantAttribute[]
+
+  @@index([companyId])
+  @@index([companyId, name])
+}
+
+model ProductAttributeValue {
+  id              String                  @id @default(cuid())
+  attributeId     String
+  value           String                  // "אדום", "160x200", וכו'
+  displayOrder    Int                     @default(0)
+  createdAt       DateTime                @default(now())
+  Attribute       ProductAttribute        @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  variantAttributes ProductVariantAttribute[]
+
+  @@index([attributeId])
+}
+
+model ProductVariantAttribute {
+  id              String              @id @default(cuid())
+  variantId       String
+  attributeId     String
+  value           String?             // ערך טקסט חופשי או reference ל-ProductAttributeValue
+  attributeValueId String?            // קישור לערך מוגדר מראש
+  Variant         ProductVariant      @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  Attribute       ProductAttribute    @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  AttributeValue  ProductAttributeValue? @relation(fields: [attributeValueId], references: [id], onDelete: SetNull)
+
+  @@unique([variantId, attributeId])
+  @@index([variantId])
+  @@index([attributeId])
 }

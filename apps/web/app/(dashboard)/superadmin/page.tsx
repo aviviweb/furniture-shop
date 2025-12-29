@@ -4,7 +4,7 @@ import { apiPatch } from '../../../lib/api';
 
 export default function SuperAdminPage() {
   const [tenantId, setTenantId] = useState('furniture-demo');
-  const [demo, setDemo] = useState(true);
+  const [demo, setDemo] = useState(false);
   const [result, setResult] = useState('');
   const [admin, setAdmin] = useState<boolean>(()=> (typeof window !== 'undefined' && localStorage.getItem('admin-mode') === 'true'));
   return (
