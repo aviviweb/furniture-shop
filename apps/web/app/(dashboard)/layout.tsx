@@ -10,6 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {[
               { href: '/', label: 'דשבורד' },
               { href: '/products', label: 'מוצרים' },
+              { href: '/products/attributes', label: 'Attributes' },
               { href: '/inventory', label: 'מלאי' },
               { href: '/customers', label: 'לקוחות' },
               { href: '/orders', label: 'הזמנות' },
@@ -17,6 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               { href: '/expenses', label: 'הוצאות' },
               { href: '/deliveries', label: 'משלוחים/הרכבות' },
               { href: '/installer', label: 'אזור מתקין' },
+              { href: '/settings', label: 'הגדרות' },
               { href: '/settings/branding', label: 'מיתוג' },
               { href: '/superadmin', label: 'מנהל מערכת' },
             ].map((item) => (
