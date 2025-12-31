@@ -15,16 +15,22 @@ export const metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Get tenant ID from headers (set by middleware)
-  const headersList = await headers();
-  const tenantId = headersList.get('x-tenant-id') || process.env.NEXT_PUBLIC_TENANT_ID || 'furniture-demo';
-  
-  // Load tenant settings from API (with error handling)
+  // Use a timeout to prevent hanging if API is slow
   let tenantSettings;
   try {
-    tenantSettings = await loadTenantSettings(tenantId);
+    const headersList = await headers();
+    const tenantId = headersList.get('x-tenant-id') || process.env.NEXT_PUBLIC_TENANT_ID || 'furniture-demo';
+    
+    // Load tenant settings from API (with error handling)
+    // Use Promise.race to timeout after 2 seconds
+    tenantSettings = await Promise.race([
+      loadTenantSettings(tenantId),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), 2000)
+      )
+    ]) as any;
   } catch (error) {
-    console.error('Failed to load tenant settings:', error);
-    // Use defaults if API fails
+    // Use defaults if API fails or times out
     tenantSettings = {
       brandName: process.env.NEXT_PUBLIC_BRAND_NAME || 'Furniture Demo',
       primaryColor: process.env.NEXT_PUBLIC_PRIMARY_COLOR || '#0ea5e9',
