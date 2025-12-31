@@ -18,8 +18,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const headersList = await headers();
   const tenantId = headersList.get('x-tenant-id') || process.env.NEXT_PUBLIC_TENANT_ID || 'furniture-demo';
   
-  // Load tenant settings from API
-  const tenantSettings = await loadTenantSettings(tenantId);
+  // Load tenant settings from API (with error handling)
+  let tenantSettings;
+  try {
+    tenantSettings = await loadTenantSettings(tenantId);
+  } catch (error) {
+    console.error('Failed to load tenant settings:', error);
+    // Use defaults if API fails
+    tenantSettings = {
+      brandName: process.env.NEXT_PUBLIC_BRAND_NAME || 'Furniture Demo',
+      primaryColor: process.env.NEXT_PUBLIC_PRIMARY_COLOR || '#0ea5e9',
+      secondaryColor: '#10b981',
+      logoUrl: null,
+      company: null,
+    };
+  }
   
   const brandName = tenantSettings.brandName;
   const primary = tenantSettings.primaryColor;

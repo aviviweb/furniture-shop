@@ -4,6 +4,10 @@ import { useRouter } from 'next/navigation';
 import { apiPost } from '../../lib/api';
 import { showToast } from '../toast';
 
+// Force this route to be included in build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
