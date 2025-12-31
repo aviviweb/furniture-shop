@@ -5,9 +5,41 @@ import { CartBadge } from './CartBadge';
 import { MiniCart } from './mini-cart';
 import { WishlistBadge } from './wishlist';
 import { LangSwitcher } from './LangSwitcher';
+import { getTenantId } from '../lib/tenant';
 
-export function ClientShell({ children, brandName, primary, text }: { children: React.ReactNode; brandName: string; primary: string; text: string }) {
+export function ClientShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false);
+  const [brandName, setBrandName] = React.useState(process.env.NEXT_PUBLIC_BRAND_NAME || 'Furniture Demo');
+  const [primary, setPrimary] = React.useState(process.env.NEXT_PUBLIC_PRIMARY_COLOR || '#0ea5e9');
+  const text = '#0f172a';
+  
+  // Load tenant settings on client side to avoid blocking the layout
+  React.useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const tenantId = getTenantId();
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+        const response = await fetch(`${API_BASE}/companies/me`, {
+          headers: { 'x-tenant-id': tenantId },
+          cache: 'no-store',
+        });
+        if (response.ok) {
+          const company = await response.json();
+          if (company.brand?.primaryColor) {
+            setPrimary(company.brand.primaryColor);
+            setBrandName(company.name);
+            // Update CSS variable
+            document.documentElement.style.setProperty('--color-primary', company.brand.primaryColor);
+          }
+        }
+      } catch (error) {
+        // Silently fail - use defaults
+        console.error('Failed to load tenant settings:', error);
+      }
+    };
+    loadSettings();
+  }, []);
+  
   return (
     <>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 16px', background:'#f7f7f7', borderBottom:'1px solid #eee' }}>
