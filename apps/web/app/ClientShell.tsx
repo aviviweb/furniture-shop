@@ -31,10 +31,16 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
             // Update CSS variable
             document.documentElement.style.setProperty('--color-primary', company.brand.primaryColor);
           }
+        } else {
+          // 404 or other error - silently use defaults
+          // Don't log 404 as it's expected if API is not available
+          if (response.status !== 404) {
+            console.warn('Failed to load tenant settings:', response.status);
+          }
         }
       } catch (error) {
-        // Silently fail - use defaults
-        console.error('Failed to load tenant settings:', error);
+        // Network error or other - silently fail and use defaults
+        // This is expected if API is not available
       }
     };
     loadSettings();
