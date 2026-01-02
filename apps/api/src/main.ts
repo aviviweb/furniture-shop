@@ -59,11 +59,14 @@ async function bootstrap() {
   
   app.setGlobalPrefix('api');
   const isDemo = isDemoMode();
-  // Allow overriding port even in demo mode to avoid conflicts
+  // Render sets PORT dynamically - must use it
   const port = process.env.PORT ? Number(process.env.PORT) : 4000;
-  await app.listen(port);
+  
+  // Listen on all interfaces (0.0.0.0) for Render compatibility
+  await app.listen(port, '0.0.0.0');
   console.log(`✅ API running on port ${port}, Demo Mode: ${isDemo}`);
   console.log(`✅ CORS enabled for origins: ${allowedOrigins.join(', ')}`);
+  console.log(`✅ Listening on 0.0.0.0:${port} (Render compatible)`);
 }
 
 bootstrap();
