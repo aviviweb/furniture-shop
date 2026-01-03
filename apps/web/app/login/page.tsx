@@ -13,10 +13,12 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     
     try {
       const response = await apiPost<{ token: string; role: string }>('/auth/login', {
@@ -28,13 +30,22 @@ export default function LoginPage() {
       localStorage.setItem('token', response.token);
       localStorage.setItem('role', response.role);
       
-      showToast('התחברת בהצלחה!');
+      showToast('התחברת בהצלחה!', 'success');
       
       // Redirect to dashboard
       router.push('/');
     } catch (error: any) {
       console.error('Login failed:', error);
-      showToast(error?.message || 'שגיאה בהתחברות. בדוק את האימייל והסיסמה.');
+      const errorMessage = error?.message || 'שגיאה בהתחברות. בדוק את האימייל והסיסמה.';
+      setError(errorMessage);
+      showToast(errorMessage, 'error');
+      
+      // Also log to console for debugging
+      console.error('Login error details:', {
+        message: error?.message,
+        stack: error?.stack,
+        url: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api',
+      });
     } finally {
       setLoading(false);
     }
@@ -51,6 +62,20 @@ export default function LoginPage() {
         maxWidth: 400
       }}>
         <h2 className="text-3xl" style={{ marginTop: 0, marginBottom: 24, textAlign: 'center' }}>כניסה</h2>
+        {error && (
+          <div style={{
+            padding: '12px 16px',
+            background: '#fee2e2',
+            border: '1px solid #fca5a5',
+            borderRadius: 4,
+            color: '#991b1b',
+            marginBottom: 16,
+            fontSize: 14,
+            textAlign: 'right',
+          }}>
+            <strong>שגיאה:</strong> {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 16 }}>
           <div>
             <label style={{ display: 'block', marginBottom: 4, fontSize: 14, fontWeight: 500 }}>
