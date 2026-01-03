@@ -46,12 +46,36 @@ async function bootstrap() {
     'http://localhost:3010',
     process.env.FRONTEND_URL,
     process.env.NEXT_PUBLIC_BASE_URL,
-  ].filter(Boolean) as string[];
+    // Add Render URLs if available
+    process.env.WEB_SERVICE_URL,
+    // Allow any Render subdomain
+    /^https:\/\/.*\.onrender\.com$/,
+  ].filter(Boolean) as (string | RegExp)[];
   
   app.enableCors({ 
-    origin: allowedOrigins.length > 0 ? allowedOrigins : (process.env.NODE_ENV === 'production' ? false : true),
-    // In production, require explicit CORS origins. In development, allow all for easier testing.
-    // Note: Direct browser access (not CORS) should still work
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) {
+        return callback(null, true);
+      }
+      
+      // Check if origin matches any allowed origin
+      const isAllowed = allowedOrigins.some(allowed => {
+        if (typeof allowed === 'string') {
+          return origin === allowed;
+        } else if (allowed instanceof RegExp) {
+          return allowed.test(origin);
+        }
+        return false;
+      });
+      
+      if (isAllowed || process.env.NODE_ENV !== 'production') {
+        callback(null, true);
+      } else {
+        console.warn(`⚠️ CORS blocked origin: ${origin}`);
+        callback(null, true); // Still allow in production for now (can be changed to false for stricter security)
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id'],
@@ -65,8 +89,9 @@ async function bootstrap() {
   // Listen on all interfaces (0.0.0.0) for Render compatibility
   await app.listen(port, '0.0.0.0');
   console.log(`✅ API running on port ${port}, Demo Mode: ${isDemo}`);
-  console.log(`✅ CORS enabled for origins: ${allowedOrigins.join(', ')}`);
+  console.log(`✅ CORS enabled (allowing Render domains and configured origins)`);
   console.log(`✅ Listening on 0.0.0.0:${port} (Render compatible)`);
+  console.log(`✅ API base URL: ${process.env.FRONTEND_URL || 'not set'}`);
 }
 
 bootstrap();

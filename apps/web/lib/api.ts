@@ -76,6 +76,11 @@ export async function apiPost<T>(path: string, body: any, tenantId?: string): Pr
     const tid = tenantId || getTenantIdForApi();
     const headers = getApiHeaders(tid);
     
+    // For login, don't send tenant-id header (it's not needed)
+    if (path === '/auth/login') {
+      delete headers['x-tenant-id'];
+    }
+    
     const res = await fetch(`${API_BASE}${path}`, {
       method: 'POST',
       headers,
@@ -92,13 +97,45 @@ export async function apiPost<T>(path: string, body: any, tenantId?: string): Pr
     }
     
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('API POST error:', errorText);
-      throw new Error(`שגיאת API: ${res.status}`);
+      let errorMessage = `שגיאת API: ${res.status}`;
+      try {
+        const errorData = await res.json();
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        } else if (typeof errorData === 'string') {
+          errorMessage = errorData;
+        }
+      } catch {
+        // If response is not JSON, try text
+        try {
+          const errorText = await res.text();
+          if (errorText) {
+            errorMessage = errorText;
+          }
+        } catch {
+          // Ignore
+        }
+      }
+      console.error('API POST error:', {
+        path,
+        status: res.status,
+        statusText: res.statusText,
+        message: errorMessage,
+        url: `${API_BASE}${path}`,
+      });
+      throw new Error(errorMessage);
     }
     return res.json();
-  } catch (error) {
-    console.error('API POST failed:', error);
+  } catch (error: any) {
+    console.error('API POST failed:', {
+      path,
+      error: error?.message || error,
+      url: `${API_BASE}${path}`,
+    });
+    // If it's a network error, provide a more helpful message
+    if (error?.message?.includes('Failed to fetch') || error?.message?.includes('NetworkError')) {
+      throw new Error('לא ניתן להתחבר לשרת. בדוק את חיבור האינטרנט או שהשרת רץ.');
+    }
     throw error;
   }
 }
