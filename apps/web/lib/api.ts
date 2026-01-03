@@ -2,6 +2,15 @@ import { getTenantId } from './tenant';
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
+// Debug: Log API base URL on client side
+if (typeof window !== 'undefined') {
+  console.log('🔧 API_BASE:', API_BASE);
+  console.log('🔧 NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    console.error('❌ NEXT_PUBLIC_API_URL is not set! Please add it in Render → furniture-web → Environment');
+  }
+}
+
 /**
  * Get tenant ID for API calls
  * Automatically detects from subdomain or falls back to env/default

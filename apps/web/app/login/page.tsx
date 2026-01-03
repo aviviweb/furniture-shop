@@ -20,6 +20,15 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     
+    // Debug: Log API URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+    console.log('🔧 Login attempt - API URL:', apiUrl);
+    if (!process.env.NEXT_PUBLIC_API_URL) {
+      setError('NEXT_PUBLIC_API_URL לא מוגדר. בדוק את ה-Environment Variables ב-Render.');
+      setLoading(false);
+      return;
+    }
+    
     try {
       const response = await apiPost<{ token: string; role: string }>('/auth/login', {
         email,
