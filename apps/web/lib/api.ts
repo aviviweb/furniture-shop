@@ -81,7 +81,10 @@ export async function apiPost<T>(path: string, body: any, tenantId?: string): Pr
       delete headers['x-tenant-id'];
     }
     
-    const res = await fetch(`${API_BASE}${path}`, {
+    const url = `${API_BASE}${path}`;
+    console.log('🔗 API POST:', { url, path, apiBase: API_BASE });
+    
+    const res = await fetch(url, {
       method: 'POST',
       headers,
       body: JSON.stringify(body),
@@ -127,14 +130,20 @@ export async function apiPost<T>(path: string, body: any, tenantId?: string): Pr
     }
     return res.json();
   } catch (error: any) {
-    console.error('API POST failed:', {
+    const url = `${API_BASE}${path}`;
+    console.error('❌ API POST failed:', {
       path,
       error: error?.message || error,
-      url: `${API_BASE}${path}`,
+      url,
+      apiBase: API_BASE,
+      hasApiUrl: !!process.env.NEXT_PUBLIC_API_URL,
     });
     // If it's a network error, provide a more helpful message
-    if (error?.message?.includes('Failed to fetch') || error?.message?.includes('NetworkError')) {
-      throw new Error('לא ניתן להתחבר לשרת. בדוק את חיבור האינטרנט או שהשרת רץ.');
+    if (error?.message?.includes('Failed to fetch') || error?.message?.includes('NetworkError') || error?.message?.includes('cannot')) {
+      const errorMsg = !process.env.NEXT_PUBLIC_API_URL 
+        ? `לא ניתן להתחבר לשרת. ה-API URL לא מוגדר. בדוק את NEXT_PUBLIC_API_URL ב-Render. (ניסיתי: ${url})`
+        : `לא ניתן להתחבר לשרת. בדוק את חיבור האינטרנט או שהשרת רץ. (URL: ${url})`;
+      throw new Error(errorMsg);
     }
     throw error;
   }
