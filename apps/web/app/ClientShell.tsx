@@ -6,6 +6,7 @@ import { MiniCart } from './mini-cart';
 import { WishlistBadge } from './wishlist';
 import { LangSwitcher } from './LangSwitcher';
 import { getTenantId } from '../lib/tenant';
+import { getApiBase } from '../lib/api';
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false);
@@ -18,8 +19,8 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
     const loadSettings = async () => {
       try {
         const tenantId = getTenantId();
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
-        const response = await fetch(`${API_BASE}/companies/me`, {
+        const apiBase = getApiBase();
+        const response = await fetch(`${apiBase}/companies/me`, {
           headers: { 'x-tenant-id': tenantId },
           cache: 'no-store',
         });

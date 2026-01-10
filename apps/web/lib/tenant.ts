@@ -1,6 +1,7 @@
 /**
  * Utility functions for tenant/subdomain handling
  */
+import { getApiBase } from './api';
 
 /**
  * Extract tenant ID from hostname (subdomain)
@@ -60,10 +61,10 @@ export function getTenantId(): string {
  * Load tenant settings from API
  */
 export async function loadTenantSettings(tenantId: string) {
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+  const apiBase = getApiBase();
   
   try {
-    const response = await fetch(`${API_BASE}/companies/me`, {
+    const response = await fetch(`${apiBase}/companies/me`, {
       headers: {
         'x-tenant-id': tenantId,
       },

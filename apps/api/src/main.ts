@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';   
 import { AppModule } from './modules/app.module';
 import { isDemoMode } from './modules/shared/demo-mode';
 import { execSync } from 'child_process';

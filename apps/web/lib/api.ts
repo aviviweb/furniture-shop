@@ -4,7 +4,7 @@ import { getTenantId } from './tenant';
  * Get API base URL - reads from environment variable at runtime
  * This ensures the value is always current, even if env var changes after build
  */
-function getApiBase(): string {
+export function getApiBase(): string {
   // In browser, try to read from window (set by next.config or runtime)
   if (typeof window !== 'undefined') {
     // @ts-ignore - Next.js injects this at runtime
@@ -158,18 +158,19 @@ export async function apiPost<T>(path: string, body: any, tenantId?: string): Pr
         status: res.status,
         statusText: res.statusText,
         message: errorMessage,
-        url: `${API_BASE}${path}`,
+        url: `${apiBase}${path}`,
       });
       throw new Error(errorMessage);
     }
     return res.json();
   } catch (error: any) {
-    const url = `${API_BASE}${path}`;
+    const apiBase = getApiBase();
+    const url = `${apiBase}${path}`;
     console.error('❌ API POST failed:', {
       path,
       error: error?.message || error,
       url,
-      apiBase: API_BASE,
+      apiBase,
       hasApiUrl: !!process.env.NEXT_PUBLIC_API_URL,
     });
     // If it's a network error, provide a more helpful message
