@@ -1,10 +1,33 @@
 import { getTenantId } from './tenant';
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+/**
+ * Get API base URL - reads from environment variable at runtime
+ * This ensures the value is always current, even if env var changes after build
+ */
+function getApiBase(): string {
+  // In browser, try to read from window (set by next.config or runtime)
+  if (typeof window !== 'undefined') {
+    // @ts-ignore - Next.js injects this at runtime
+    const runtimeUrl = window.__NEXT_PUBLIC_API_URL__ || process.env.NEXT_PUBLIC_API_URL;
+    if (runtimeUrl) {
+      return runtimeUrl.endsWith('/api') ? runtimeUrl : `${runtimeUrl}/api`;
+    }
+  }
+  // Fallback to env var or default
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl) {
+    return envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
+  }
+  return 'http://localhost:4000/api';
+}
+
+// For backward compatibility, export as constant (but it's actually a function call)
+export const API_BASE = getApiBase();
 
 // Debug: Log API base URL on client side
 if (typeof window !== 'undefined') {
-  console.log('🔧 API_BASE:', API_BASE);
+  const actualBase = getApiBase();
+  console.log('🔧 API_BASE:', actualBase);
   console.log('🔧 NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
   if (!process.env.NEXT_PUBLIC_API_URL) {
     console.error('❌ NEXT_PUBLIC_API_URL is not set! Please add it in Render → furniture-web → Environment');
@@ -53,7 +76,8 @@ export async function apiGet<T>(path: string, tenantId?: string): Promise<T> {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    const res = await fetch(`${API_BASE}${path}`, { 
+    const apiBase = getApiBase();
+    const res = await fetch(`${apiBase}${path}`, { 
       cache: 'no-store', 
       headers
     });
@@ -90,8 +114,9 @@ export async function apiPost<T>(path: string, body: any, tenantId?: string): Pr
       delete headers['x-tenant-id'];
     }
     
-    const url = `${API_BASE}${path}`;
-    console.log('🔗 API POST:', { url, path, apiBase: API_BASE });
+    const apiBase = getApiBase();
+    const url = `${apiBase}${path}`;
+    console.log('🔗 API POST:', { url, path, apiBase });
     
     const res = await fetch(url, {
       method: 'POST',
@@ -163,7 +188,8 @@ export async function apiPatch<T>(path: string, body: any, tenantId?: string): P
     const tid = tenantId || getTenantIdForApi();
     const headers = getApiHeaders(tid);
     
-    const res = await fetch(`${API_BASE}${path}`, {
+    const apiBase = getApiBase();
+    const res = await fetch(`${apiBase}${path}`, {
       method: 'PATCH',
       headers,
       body: JSON.stringify(body),
@@ -195,7 +221,8 @@ export async function apiDelete<T>(path: string, tenantId?: string): Promise<T> 
     const tid = tenantId || getTenantIdForApi();
     const headers = getApiHeaders(tid);
     
-    const res = await fetch(`${API_BASE}${path}`, {
+    const apiBase = getApiBase();
+    const res = await fetch(`${apiBase}${path}`, {
       method: 'DELETE',
       headers,
     });
